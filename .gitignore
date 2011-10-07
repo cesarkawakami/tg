@@ -1,0 +1,7 @@
+*.aux
+*.lof
+*.log
+*.lot
+*.synctex.gz
+*.toc
+/tg-cesarkawakami.pdf

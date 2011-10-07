@@ -1,0 +1,99 @@
+\documentclass[times,ruledheader]{abnt}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[portuges,brazilian]{babel}
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath}
+\usepackage{cancel}
+%\usepackage{fancyhdr}
+\usepackage{enumerate}
+\usepackage[aboveskip=3pt,font={small,sf},labelfont=bf]{caption}
+\usepackage{subfig}
+\usepackage{float}
+\usepackage{fancyvrb}
+
+%%%
+%%% TITLE
+%%%
+\autor{Cesar Ryudi Kawakami}
+\titulo{Sistemas online para execução segura de código arbitrário}
+\orientador{Prof. Armando Ramos Gouveia (ITA)}
+\instituicao{Instituto Tecnológico de Aeronáutica}
+\local{São José dos Campos}
+\data{2011}
+
+%%%
+%%% PAGE SETTINGS
+%%%
+
+%%%
+%%% MANY FLOATS
+%%%
+\renewcommand{\topfraction}{.85}
+\renewcommand{\bottomfraction}{.7}
+\renewcommand{\textfraction}{.15}
+\renewcommand{\floatpagefraction}{.66}
+\renewcommand{\dbltopfraction}{.66}
+\renewcommand{\dblfloatpagefraction}{.66}
+\setcounter{topnumber}{9}
+\setcounter{bottomnumber}{9}
+\setcounter{totalnumber}{20}
+\setcounter{dbltopnumber}{9}
+
+%%%
+%%% SPECIFIC COMMANDS
+%%%
+\newcommand{\Lap}[1]{\mathcal{L}\left\{#1\right\}}
+\newcommand{\Equiv}{\Longleftrightarrow}
+\newcommand{\Impl}{\Longrightarrow}
+\floatstyle{boxed}
+\restylefloat{figure}
+\fvset{frame=lines,fontsize=\small,xleftmargin=7pt,xrightmargin=7pt,framerule=1pt,resetmargins=true}
+
+%%%
+%%% BEGIN DOCUMENT
+%%%
+
+\begin{document}
+
+\folhaderosto
+
+\begin{folhadeaprovacao}
+	\setlength\ABNTsignwidth{10cm}
+	\setlength\ABNTsignthickness{0.4pt}
+	\setlength\ABNTsignskip{3cm}
+	\begin{center}
+		\textbf{Sistemas online para execução segura de código arbitrário}
+		
+		Esta publicação foi aceita como Relatório Final de Trabalho de Graduação
+	\end{center}
+	\assinatura{Cesar Ryudi Kawakami \\ Autor}
+	
+	\assinatura{Prof. Armando Ramos Gouveia \\ Orientador}
+	
+	\assinatura{Prof. Carlos Henrique Costa Ribeiro \\ Coordenador do Curso de Engenharia de Computação}
+	\vfill
+	\begin{center}
+		São José dos Campos, DATA DE APROVAÇÃO
+	\end{center}
+\end{folhadeaprovacao}
+
+\begin{resumo}
+Resumo em português. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce consequat commodo tempor. Mauris a urna vitae neque venenatis pulvinar. In sapien urna, vehicula nec ornare vel, adipiscing sed sem. Sed tristique, enim sed pulvinar eleifend, libero lectus hendrerit neque, ut dapibus ligula massa at enim. Nulla sollicitudin lectus ac magna tempus elementum. Aliquam dignissim euismod purus non accumsan. Aenean a mi urna. Nunc scelerisque rutrum hendrerit. Donec ac orci quis leo pretium tincidunt. Nunc ullamcorper diam at lectus volutpat at consequat massa sagittis. Proin nulla urna, luctus sed posuere id, mattis vitae nisl. Aliquam erat volutpat.
+\end{resumo}
+
+\begin{abstract}
+Abstract in English. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce consequat commodo tempor. Mauris a urna vitae neque venenatis pulvinar. In sapien urna, vehicula nec ornare vel, adipiscing sed sem. Sed tristique, enim sed pulvinar eleifend, libero lectus hendrerit neque, ut dapibus ligula massa at enim. Nulla sollicitudin lectus ac magna tempus elementum. Aliquam dignissim euismod purus non accumsan. Aenean a mi urna. Nunc scelerisque rutrum hendrerit. Donec ac orci quis leo pretium tincidunt. Nunc ullamcorper diam at lectus volutpat at consequat massa sagittis. Proin nulla urna, luctus sed posuere id, mattis vitae nisl. Aliquam erat volutpat.
+\end{abstract}
+
+\tableofcontents
+
+\listoffigures
+
+\listoftables
+
+\chapter{Considerações Iniciais}
+
+\section{Introdução}
+
+\end{document}
