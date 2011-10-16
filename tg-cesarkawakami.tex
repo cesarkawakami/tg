@@ -1,4 +1,4 @@
-\documentclass[times,ruledheader]{abnt}
+\documentclass[ruledheader]{abnt}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[portuges,brazilian]{babel}
@@ -94,9 +94,43 @@ Abstract in English. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fu
 
 \chapter{Considerações Iniciais}
 
+Neste capítulo, são feitas considerações iniciais sobre blabla, blabla e blabla. Na seção bla, falaremos de bla.
+
 \section{Introdução}
 
-As competições de programação, como a \emph{International Olympiad in Informatics (IOI)} \cite{ioinformatics}
+Um sistema online de exe blablabla possibilitaria o uso em competições de programação e em IDEs online.
+
+\subsection{Competições de Programação}
+
+As competições de programação, como a IOI\footnote{International Olympiad in Informatics} \cite{ioinformatics}, a ACM\footnote{Association for Computing Machinery} ICPC\footnote{International Collegiate Programming Contest} \cite{acmicpc} e a GCJ\footnote{Google Code Jam} \cite{googlecodejam}, são eventos de porte significativo com alcance mundial, posicionando-se como excelentes vetores de divulgação das ciências da computação e ensino, inspiração e captura de talentos nesse campo. Numa área do conhecimento de desenvolvimento ainda incipiente ao redor do mundo, tem-se um positivo número anual de mais de 100.000 participantes estudantis mundialmente \cite{icpcfactsheet,wang2010selection}.
+
+O formato geral dessas competições consiste na resolução de um certo número de situações-problema (em geral, de três a doze) em um determinado intervalo de tempo, usualmente de cinco horas. A resolução de um problema, neste caso, compreende a interpretação da situação, a elaboração de uma estratégia de solução viável nos termos das restrições da situação e a correta implementação dessa solução em uma linguagem de propósito geral como C/C++, Pascal ou Java. As soluções em prova são avaliadas unicamente pela correção e eficiência de sua implementação. 
+
+Restrições, dados e entradas dos problemas são desenhados de maneira a possibilitar a correção automatizada das soluções dos competidores, que são executadas em servidores contra uma bateria de entradas elaboradas pela banca examinadora a fim de determinar (julgar) a pontuação do competidor para aquele problema. Em competições no formato da ICPC, as soluções dos competidores são julgadas assim que recebidas de modo fornecer realimentação o mais rápido possível.
+
+Embora cada competição empregue condições diferentes de aceitação e graduação das soluções enviadas, são dois os principais critérios utilizados. Os programas são avaliados pela sua \emph{correção} através da comparação dos resultados emitidos contra um catálogo de entradas e saídas esperadas elaborado pela comissão julgadora. Os programas são também avaliados pela sua \emph{eficiência} através do seu tempo de execução total em relação à bateria de testes executada, para a qual existe um tempo-referência máximo. Tais tempos-referência baseiam-se nas melhores soluções conhecidas para o problema em questão implementadas pela banca, e a configuração do problema é ajustada para se ter tempos máximos no entorno entre alguns segundos e alguns minutos.
+
+Devido à elevada relação número de problemas--tempo disponível, ficando em menos de 30 minutos por problema em competições como a ICPC, são provas em que o tempo é considerado recurso escasso e de controle essencial para uma boa eficiência.
+
+\subsection{Sistemas Informatizados para Competições de Programação}
+
+Para a boa condução de uma competição de programação e devido a requisitos particulares inerentes à mesma, sistemas informatizados especializados tornam-se ferramentas de fundamental importância. Dentre as características necessárias a um bom sistema para competições de programação, podem ser ressaltados os seguintes pontos.
+
+\subsubsection{Escalabilidade}
+
+No contexto das competições de programação, devem ser considerados cenários de provas \emph{on-site}\footnote{Situações em que todos os competidores competem em um mesmo local designado.} com 500 clientes como durante a IOI \cite{ioi-nl1-2007} e provas \emph{off-site}\footnote{Situações em que a prova é praticada inteiramente através da internet, assim atingindo escala mundial mais facilmente.} com 30.000 clientes simultaneamente como durante a GCJ \cite{googlecodejamhistory}.  Considerando o padrão de uso pesado dos sistemas envolvidos, particularmente devido ao requerimento de executar por minutos pedaços de código arbitrário enviados pelos competidores, surge a necessidade de boa escalabilidade na arquitetura de execução de código do sistema em questão.
+
+Tendo em vista, ainda, a natureza dinâmica e agitada do ambiente de prova, taxa-se também qualquer estrutura de front-end do sistema, seja pela necessidade de respostas rápidas por parte dos competidores, seja pelo próprio uso intensivo consequência da vontade dos competidores de ter a informação mais atual com grande frequência.
+
+O desenho da arquitetura do sistema em questão deve, então, levar em conta a escalabilidade como caminho para o aumento do throughput e da velocidade de resposta considerados.
+
+\subsubsection{Resposta Rápida e Comunicação Bidirecional}
+
+
+
+
+
+
 
 \bibliography{tg-cesarkawakami}
 
