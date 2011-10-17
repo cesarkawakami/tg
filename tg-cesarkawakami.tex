@@ -126,11 +126,17 @@ O desenho da arquitetura do sistema em questão deve, então, levar em conta a e
 
 \subsubsection{Resposta Rápida e Comunicação Bidirecional}
 
+As competições de programação são provas em que o tempo é escasso e grande parte das interações depende do sistema em questão. Visando uma boa condução da competição, o sistema deve buscar exigir do usuário interação e espera mínimas para operação. Um sistema pouco ergonômico causa atrasos que se acumulam ao longo do tempo de uma prova.
 
+A título de exemplo, numa competição estilo ICPC, considere-se uma prova com 5 horas de para a resolução de 10 problemas. Tomando por base um número médio de 4 tentativas por problema, devem ser consideradas 40 submissões. Se cada submissão tomar do competidor 1 minuto, terão sido gastos, ao final da prova, um total de 40 minutos (comparados às 5 horas disponíveis) apenas em interações com um sistema que deveria ser transparente à situação.
 
+Ainda no âmbito da eficiência na interface do sistema e novamente considerando as características do problema, é necessário ao competidor um acompanhamento em ``tempo real'' do andamento da prova e dos outros competidores. Em divergência da grande maioria dos sistemas web remotos da atualidade, surge a necessidade de comunicação bidirecional na qual, além do quadro comum em que o cliente requisita informações do servidor, seja possível, também, o quadro em que o servidor, munido de nova informação, a empurra para os clientes sem que haja necessidade de requisição.
 
+A arquitetura da internet da atualidade não foi desenhada para este caso de uso, e a problemática consequente é analisada em capítulo posterior deste trabalho.
 
+\subsubsection{Segurança, Privacidade e Resiliência}
 
+Considerando o alto valor do tempo durante o andamento de uma prova, em função do alto grau de exposição a que o sistema pode estar exposto, e dada a característica secreta e competitiva dos dados envolvidos durante a competição, são de fundamental importância os conceitos de segurança, privacidade e resiliência no desenho de um sistema informatizado para competições de programação.
 
 \bibliography{tg-cesarkawakami}
 
