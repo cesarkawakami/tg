@@ -4,6 +4,8 @@
 *.lot
 *.synctex.gz
 *.toc
-/tg-cesarkawakami.pdf
+/rela/tg-cesarkawakami.pdf
 *.bbl
 *.blg
+*.out
+.DS_Store

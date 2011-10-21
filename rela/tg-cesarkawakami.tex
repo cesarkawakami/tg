@@ -10,6 +10,7 @@
 \usepackage{subfig}
 \usepackage{float}
 \usepackage{fancyvrb}
+\usepackage[breaklinks]{hyperref}
 \usepackage[num]{abntcite}
 
 %%%
@@ -55,9 +56,9 @@
 %%%
 
 \begin{document}
-
+\pagenumbering{alph}
 \folhaderosto
-
+\pagenumbering{arabic}
 \begin{folhadeaprovacao}
 	\setlength\ABNTsignwidth{10cm}
 	\setlength\ABNTsignthickness{0.4pt}
@@ -102,13 +103,21 @@ Um sistema online de exe blablabla possibilitaria o uso em competições de prog
 
 \subsection{Competições de Programação}
 
-As competições de programação, como a IOI\footnote{International Olympiad in Informatics} \cite{ioinformatics}, a ACM\footnote{Association for Computing Machinery} ICPC\footnote{International Collegiate Programming Contest} \cite{acmicpc} e a GCJ\footnote{Google Code Jam} \cite{googlecodejam}, são eventos de porte significativo com alcance mundial, posicionando-se como excelentes vetores de divulgação das ciências da computação e ensino, inspiração e captura de talentos nesse campo. Numa área do conhecimento de desenvolvimento ainda incipiente ao redor do mundo, tem-se um positivo número anual de mais de 100.000 participantes estudantis mundialmente \cite{icpcfactsheet,wang2010selection}.
+As competições de programação, como a IOI\footnote{International Olympiad in Informatics} \cite{ioinformatics}, a ACM\footnote{Association for Computing Machinery} ICPC\footnote{International Collegiate Programming Contest} \cite{acmicpc} e a GCJ\footnote{Google Code Jam} \cite{googlecodejam}, são eventos de porte significativo com alcance mundial, posicionando-se como excelentes vetores de divulgação das ciências da computação, além de ensino, inspiração e captura de talentos nesse campo. Numa área do conhecimento de desenvolvimento ainda incipiente ao redor do mundo, tem-se um positivo número anual de mais de 100.000 participantes estudantis mundialmente \cite{icpcfactsheet,wang2010selection}.
 
 O formato geral dessas competições consiste na resolução de um certo número de situações-problema (em geral, de três a doze) em um determinado intervalo de tempo, usualmente de cinco horas. A resolução de um problema, neste caso, compreende a interpretação da situação, a elaboração de uma estratégia de solução viável nos termos das restrições da situação e a correta implementação dessa solução em uma linguagem de propósito geral como C/C++, Pascal ou Java. As soluções em prova são avaliadas unicamente pela correção e eficiência de sua implementação. 
 
 Restrições, dados e entradas dos problemas são desenhados de maneira a possibilitar a correção automatizada das soluções dos competidores, que são executadas em servidores contra uma bateria de entradas elaboradas pela banca examinadora a fim de determinar (julgar) a pontuação do competidor para aquele problema. Em competições no formato da ICPC, as soluções dos competidores são julgadas assim que recebidas de modo fornecer realimentação o mais rápido possível.
 
 Embora cada competição empregue condições diferentes de aceitação e graduação das soluções enviadas, são dois os principais critérios utilizados. Os programas são avaliados pela sua \emph{correção} através da comparação dos resultados emitidos contra um catálogo de entradas e saídas esperadas elaborado pela comissão julgadora. Os programas são também avaliados pela sua \emph{eficiência} através do seu tempo de execução total em relação à bateria de testes executada, para a qual existe um tempo-referência máximo. Tais tempos-referência baseiam-se nas melhores soluções conhecidas para o problema em questão implementadas pela banca, e a configuração do problema é ajustada para se ter tempos máximos no entorno entre alguns segundos e alguns minutos.
+
+Em competições de estilo ICPC, os resultados das análise das soluções submetidas são fornecidos assim que disponíveis durante a competição, usualmente após alguns minutos. Tal realimentação permite à equipe mal sucedida modificar sua solução para tentar corrigir o problema. A fim de manter o desafio, porém, apenas um conjunto enxuto de sinais é enviado aos competidores, geralmente composto de 4 sinais, nomeadamente:
+\begin{itemize}
+	\item \emph{Accepted,} para soluções aceitas como corretas pelo sistema.
+	\item \emph{Wrong answer,} para soluções tidas como incorretas pelo sistema através da análise da saída do programa.
+	\item \emph{Time limit exceeded,} para soluções tidas como ineficientes pelo sistema por terem excedido o tempo-referência máximo para o problema.
+	\item \emph{Runtime error,} para soluções tidas como incorretas pelo sistema por terem encontrado um erro durante sua execução.
+\end{itemize}
 
 Devido à elevada relação número de problemas--tempo disponível, ficando em menos de 30 minutos por problema em competições como a ICPC, são provas em que o tempo é considerado recurso escasso e de controle essencial para uma boa eficiência.
 
@@ -118,7 +127,7 @@ Para a boa condução de uma competição de programação e devido a requisitos
 
 \subsubsection{Escalabilidade}
 
-No contexto das competições de programação, devem ser considerados cenários de provas \emph{on-site}\footnote{Situações em que todos os competidores competem em um mesmo local designado.} com 500 clientes como durante a IOI \cite{ioi-nl1-2007} e provas \emph{off-site}\footnote{Situações em que a prova é praticada inteiramente através da internet, assim atingindo escala mundial mais facilmente.} com 30.000 clientes simultaneamente como durante a GCJ \cite{googlecodejamhistory}.  Considerando o padrão de uso pesado dos sistemas envolvidos, particularmente devido ao requerimento de executar por minutos pedaços de código arbitrário enviados pelos competidores, surge a necessidade de boa escalabilidade na arquitetura de execução de código do sistema em questão.
+No contexto das competições de programação, devem ser considerados cenários de provas \emph{on-site}\footnote{Situações em que todos os competidores competem em um mesmo local designado.} com mais de 500 clientes como durante a IOI \cite{ioi-nl1-2007} e provas \emph{off-site}\footnote{Situações em que a prova é praticada inteiramente através da internet, assim atingindo escala mundial facilmente.} com mais de 30.000 clientes simultaneamente como durante a GCJ \cite{googlecodejamhistory}.  Considerando o padrão de uso pesado dos sistemas envolvidos, particularmente devido ao requerimento de executar por minutos pedaços de código arbitrário enviados pelos competidores, surge a necessidade de boa escalabilidade na arquitetura de execução de código do sistema em questão.
 
 Tendo em vista, ainda, a natureza dinâmica e agitada do ambiente de prova, taxa-se também qualquer estrutura de front-end do sistema, seja pela necessidade de respostas rápidas por parte dos competidores, seja pelo próprio uso intensivo consequência da vontade dos competidores de ter a informação mais atual com grande frequência.
 
@@ -130,13 +139,57 @@ As competições de programação são provas em que o tempo é escasso e grande
 
 A título de exemplo, numa competição estilo ICPC, considere-se uma prova com 5 horas de para a resolução de 10 problemas. Tomando por base um número médio de 4 tentativas por problema, devem ser consideradas 40 submissões. Se cada submissão tomar do competidor 1 minuto, terão sido gastos, ao final da prova, um total de 40 minutos (comparados às 5 horas disponíveis) apenas em interações com um sistema que deveria ser transparente à situação.
 
-Ainda no âmbito da eficiência na interface do sistema e novamente considerando as características do problema, é necessário ao competidor um acompanhamento em ``tempo real'' do andamento da prova e dos outros competidores. Em divergência da grande maioria dos sistemas web remotos da atualidade, surge a necessidade de comunicação bidirecional na qual, além do quadro comum em que o cliente requisita informações do servidor, seja possível, também, o quadro em que o servidor, munido de nova informação, a empurra para os clientes sem que haja necessidade de requisição.
+Ainda no âmbito da eficiência na interface do sistema e novamente considerando as características do problema, é necessário ao competidor um acompanhamento em ``tempo real'' do andamento da prova e dos outros competidores. Em divergência da grande maioria dos sistemas web remotos da atualidade, surge a necessidade de comunicação bidirecional na qual, além do quadro comum em que o cliente requisita informações do servidor, seja possível, também, o quadro em que o servidor, munido de nova informação, a ``empurra'' para os clientes sem que haja necessidade de requisição.
 
 A arquitetura da internet da atualidade não foi desenhada para este caso de uso, e a problemática consequente é analisada em capítulo posterior deste trabalho.
 
-\subsubsection{Segurança, Privacidade e Resiliência}
+\subsubsection{Segurança da Informação}
 
-Considerando o alto valor do tempo durante o andamento de uma prova, em função do alto grau de exposição a que o sistema pode estar exposto, e dada a característica secreta e competitiva dos dados envolvidos durante a competição, são de fundamental importância os conceitos de segurança, privacidade e resiliência no desenho de um sistema informatizado para competições de programação.
+Considerando o alto valor do tempo durante o andamento de uma prova em função do alto grau de exposição a que o sistema pode estar exposto, e dada a característica secreta e competitiva dos dados envolvidos durante a competição, é de fundamental importância o conceito de \emph{segurança da informação} no desenho de um sistema informatizado para competições de programação.
+
+No contexto da segurança da informação, é utilizado como base o triângulo composto por confidencialidade, integridade e disponibilidade \cite{stamp2011}. A \emph{confidencialidade} se trata do princípio pelo qual o acesso a informações deve ser negado ou impedido de alguma forma às partes que não foram autorizadas para tal. A \emph{integridade} trata da prevenção~--- ou, em último caso, detecção~--- de alterações ou deleções dos dados existentes por partes não autorizadas. Finalmente, com a crescente preocupação com ataques de negação de serviço através da internet, a \emph{disponibilidade} dos sistemas passou a ser preocupação fundamental no desenho de sistemas focado em segurança da informação.
+
+Devido à característica pecular de execução de código arbitrário, os sistemas em questão são particularmente suscetíveis a uma ampla gama de ataques \cite{tochev2010,forisek2006security}. As seguintes categorias de ataques destacam-se como de particular relevância.
+\begin{itemize}
+	\item Ataques de \emph{negação de serviço} (DoS, do inglês \emph{denial of service}) visam afetar a disponibilidade do sistema alvo, e são preocupação inerente a qualquer sistema informatizado, em particular aqueles com envolvimento da web. Em ambiente de prova, de alguma maneira, todas as máquinas do sistema estão conectadas, expondo o sistema a este tipo de ataque. Ademais, existe a possibilidade de ataques de DoS voltados não aos servidores de competição, mas diretamente aos competidores.
+	
+	\item Ataques de \emph{escalação de privilégios} são usualmente considerados um segundo passo após um bem-sucedido ataque de execução de código arbitrário. No contexto de competições de programação, esta primeira ``porta'' já se encontra aberta, tornando a análise dos potenciais ataques de escalação de privilégios crucial, afetando os três componentes da segurança da informação.
+	
+	\item Ataques \emph{destrutivos} podem ser considerados versões mais graves de ataques de disponibilidade, buscando a desconstrução de funcionalidades do sistema ou de suas medidas de segurança a fim de afetar a integridade ou a disponibilidade do sistema informatizado. Ataques destrutivos são também facilitados pela característica aberta quanto à execução de código externo dos sistemas em questão.
+	
+	\item Ataques por \emph{canal dissimulado (covert channel)} atuam pela utilização, pelo atacante, de meios não previstos ou intencionados pelo arquiteto do sistema para comunicar informação. No contexto geral, são geralmente utilizados para a transmissão de informação confidencial à usuários ou áreas não autorizadas, e sua importância no âmbito das competições de programação se dá da mesma maneira. A título de exemplo, um programa poderia fornecer informações confidenciais sobre os casos de teste a que está sendo exposto forçando a emissão de sinais de realimentação específicos que serão retornados pelo sistema ao competidor automaticamente.
+\end{itemize}
+
+\subsection{Sistemas já existentes}
+
+bla
+
+\section{Objetivos}
+asdf
+\section{Estrutura do Trabalho}
+asdf
+
+\chapter{Um sistema online para execução segura de código arbitrário}
+
+Frente aos requisitos e especificidades referenciados no capítulo anterior, são estudadas maneiras de abordar ou contornar cada um dos desafios apresentados.
+
+\section{Comunicação bidirecional}
+
+Falar sobre a arquitetura da web, do HTTP, comunicação unidirecional, abordagens possíveis, polling, long polling, web sockets. Justificar.
+
+\section{Arquitetura}
+
+Bolar arquitetura totalmente e horizontalmente escalável. Comentar sobre single point bottlenecks, front end, back end, banco de dados distribuído. MongoDB, CouchDB.
+
+\section{Segurança da informação}
+
+Expandir no artigo do Forisek. Abordar cada um dos ataques. Sandboxing, linux kernel modules.
+
+\section{Código}
+
+Explicar aqui o que foi implementado.s
+
+\chapter{Conclusões e Comentários Finais}
 
 \bibliography{tg-cesarkawakami}
 
