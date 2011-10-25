@@ -9,3 +9,8 @@
 *.blg
 *.out
 .DS_Store
+/app/tornado-src
+/app/env
+*.sublime-*
+/app/data
+/app/gomongo.sh

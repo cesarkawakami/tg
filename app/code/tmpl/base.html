@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head>
+    <title>{% block title %}{% end %} - FACS</title>
+    <link rel="stylesheet" href="{{ static_url('bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ static_url('base.css') }}">
+    <script src="{{ static_url('jquery.js') }}"></script>
+    <script src="{{ static_url('app.js') }}"></script>
+</head>
+<body>
+    {% block topnav %}{% end %}
+    <div class="container">
+        {% block content %}{% end %}
+    </div>
+</body>
+</html>
