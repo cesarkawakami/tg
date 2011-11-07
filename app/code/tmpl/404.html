@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ _("Page Not Found") }}
+{% end %}
+
+{% block topnav %}
+    {% module Template("topnav-base.html") %}
+{% end %}
+
+{% block content %}
+    <div class="row">
+        <div class="span8 offset4">
+            <div class="alert-message block-message error">
+                <p><strong>{{ _("Page Not Found") }}</strong></p>
+                <p>{{ _("The page you were looking for was not found. Sorry!") }}</p>
+                <div class="alert-actions">
+                    <a class="btn small" href="/">{{ _("Go to Home") }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% end %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}{% block subtitle %}{% end %} - Admin{% end %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ static_url('admin.css') }}">
+    <script src="{{ static_url('ajax.js') }}"></script>
+{% end %}
+
+{% block topnav %}
+    {% module Template("topnav-admin.html", admin=admin) %}
+{% end %}

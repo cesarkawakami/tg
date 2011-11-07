@@ -1,0 +1,12 @@
+{% try %}
+    {% for error in errors %}
+        <div class="alert-message">
+            {% if isinstance(error, tuple) %}
+                <p><strong>{{ _(error[0]) }} </strong>{{ _(error[1]) }}</p>
+            {% else %}
+                <p><strong>{{ _(error) }}</strong></p>
+            {% end %}
+        </div>
+    {% end %}
+{% except NameError %}
+{% end %}

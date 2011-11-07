@@ -1,6 +1,6 @@
 {% extends "topnav-base.html" %}
 
 {% block items %}
-    <li><a>Contestant: {{ contestant.name }}</a></li>
-    <li><a href="">blabla</a></li>
+    <li><a>{{ _("Contestant: %(username)s") % contestant }}</a></li>
+    <li><a href="/logout">Logout</a></li>
 {% end %}

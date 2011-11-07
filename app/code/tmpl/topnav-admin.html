@@ -1,0 +1,7 @@
+{% extends "topnav-base.html" %}
+
+{% block items %}
+    <li><a>{{ _("Admin: %(username)s") % admin }}</a></li>
+    <li><a href="/admin/contestants">Contestants</a></li>
+    <li><a href="/logout">Logout</a></li>
+{% end %}
