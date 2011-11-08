@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block subtitle %}Problems{% end %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Problems</h1>
+    </div>
+    <div class="row">
+        <div class="span5">
+            <h3>Quick Add</h3>
+            <form class="form-stacked" action="/admin/problems"
+                  enctype="multipart/form-data" method="post">
+                {% raw xsrf_form_html() %}
+                <fieldset>
+                    <div class="clearfix">
+                        <label>name</label>
+                        <div class="input">
+                            <input class="span4" name="name" type="text">
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <label>time limit</label>
+                        <div class="input">
+                            <input class="span4" name="time_limit" type="text">
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <label>input</label>
+                        <div class="input">
+                            <input class="input-file span4" name="input" type="file">
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <label>output</label>
+                        <div class="input">
+                            <input class="input-file span4" name="output" type="file">
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <input type="submit" class="btn primary" value="Go">
+                    </div>
+                </fieldset>
+            </form>
+
+            <h3>Garbage Collection</h3>
+            <ul>
+                <li><a href="/admin/problems/gc" data-ajaxify>Collect garbage</a></li>
+            </ul>
+        </div>
+        <div class="span11">
+            <h2>Problem List</h2>
+            <table class="zebra-striped">
+                <thead>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>input/output</th>
+                    <th>time limit</th>
+                    <th>actions</th>
+                </thead>
+                <tbody>
+                    {% for problem in problems %}
+                        <tr>
+                            <td>{{ problem["_id"] }}</td>
+                            <td>{{ problem["name"] }}</td>
+                            <td>
+                                <a href="/admin/problems/{{ problem['_id'] }}/input">input</a>/<a href="/admin/problems/{{ problem['_id'] }}/output">output
+                            </td>
+                            <td>{{ "{0} s".format(problem["time_limit"]) }}</td>
+                            <td>
+                                <a href="/admin/problems/{{ problem['_id'] }}/delete"
+                                   data-ajaxify>
+                                    delete
+                                </a>
+                            </td>
+                        </tr>
+                    {% end %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% end %}

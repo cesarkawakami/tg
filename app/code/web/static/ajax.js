@@ -3,9 +3,9 @@ Ajax = (function() {
         init: function() {
             $("form[data-ajaxify]").live("submit", function(evt) {
                 evt.preventDefault();
-                var $form = $(this),
-                    url = $form.attr("action");
-                $.post(url, $form.serialize(), null, "script");
+                var form = $(this),
+                    url = form.attr("action");
+                $.post(url, form.serialize(), null, "script");
             });
 
             $("a[data-ajaxify]").live("click", function(evt) {

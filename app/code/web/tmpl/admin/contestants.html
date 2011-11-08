@@ -1,4 +1,4 @@
-{% extends "admin-base.html" %}
+{% extends "base.html" %}
 
 {% block subtitle %}Contestants{% end %}
 
@@ -9,8 +9,7 @@
     <div class="row">
         <div class="span5">
             <h3>Quick Add</h3>
-            <form class="form-stacked" action="/admin/contestants/add" method="post"
-                  data-ajaxify>
+            <form class="form-stacked" action="/admin/contestants" method="post" data-ajaxify>
                 {% raw xsrf_form_html() %}
                 <fieldset>
                     <div class="clearfix">
@@ -64,12 +63,10 @@
                             <td>{{ contestant["_id"] }}</td>
                             <td>{{ contestant["username"] }}</td>
                             <td>
-                                <form class="nospacing" action="/admin/contestants/delete"
-                                      method="post" data-ajaxify>
-                                    {% raw xsrf_form_html() %}
-                                    <input type="hidden" name="id" value="{{ contestant['_id'] }}">
-                                    <a href="#" data-formsubmit>delete</a>
-                                </form>
+                                <a href="/admin/contestants/{{ contestant['_id'] }}/delete"
+                                   data-ajaxify>
+                                    delete
+                                </a>
                             </td>
                         </tr>
                     {% end %}

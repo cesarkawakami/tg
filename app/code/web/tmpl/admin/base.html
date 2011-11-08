@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "../base.html" %}
 
 {% block title %}{% block subtitle %}{% end %} - Admin{% end %}
 
@@ -8,5 +8,5 @@
 {% end %}
 
 {% block topnav %}
-    {% module Template("topnav-admin.html", admin=admin) %}
+    {% module Template("admin/topnav.html", admin=admin) %}
 {% end %}

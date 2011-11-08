@@ -8,6 +8,6 @@ class ContestantRootHandler(BaseHandler):
     @util.authenticated_as("contestant")
     def get(self):
         self.render(
-            "contestant-root.html",
+            "contestant/root.html",
             contestant=self.current_user
         )

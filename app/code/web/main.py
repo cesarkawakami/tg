@@ -4,6 +4,7 @@ import os
 import tornado.web
 
 import router
+import run
 import util
 from db import D
 from handlers.base import BaseHandler
@@ -30,10 +31,11 @@ class LoginHandler(BaseHandler):
     def post(self):
         username = self.get_argument("username", "")
         password = self.get_argument("password", "")
+        next = self.get_argument("next", "/")
         user = D.users.find_one({ "username": username })
         if user and util.hashed_eq(password, user["password"]):
             self.set_secure_cookie("user_id", str(user["_id"]))
-            self.redirect("/")
+            self.redirect(next)
         else:
             return self.render(
                 "login.html",
@@ -73,8 +75,13 @@ settings = {
 }
 
 if __name__ == "__main__":
+    # must be called in advance of any Tornado constructors
+    from zmq.eventloop import ioloop
+    ioloop.install()
+
     application = tornado.web.Application(router.get_routes(), **settings)
     application.listen(8888)
 
-    from tornado.ioloop import IOLoop
-    tornado.ioloop.IOLoop.instance().start()
+    run.setup()
+
+    ioloop.IOLoop.instance().start()

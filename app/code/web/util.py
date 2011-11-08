@@ -7,7 +7,7 @@ import tornado.web
 
 def hashed_pw(password, salt=None):
     if salt is None:
-        salt = "".join((random.choice(string.ascii_letters + string.digits) for x in range(10)))
+        salt = "".join(( random.choice(string.ascii_letters + string.digits) for x in range(10) ))
     hasher = hashlib.md5()
     hasher.update(salt + password)
     return salt + "$" + hasher.hexdigest()
