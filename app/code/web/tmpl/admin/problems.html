@@ -42,11 +42,6 @@
                     </div>
                 </fieldset>
             </form>
-
-            <h3>Garbage Collection</h3>
-            <ul>
-                <li><a href="/admin/problems/gc" data-ajaxify>Collect garbage</a></li>
-            </ul>
         </div>
         <div class="span11">
             <h2>Problem List</h2>
@@ -76,6 +71,30 @@
                         </tr>
                     {% end %}
                 </tbody>
+            </table>
+
+            <h2>Files</h2>
+            <table class="zebra-striped">
+                <thead>
+                    <th>id</th>
+                    <th>size</th>
+                    <th>referenced by</th>
+                    <th>actions</th>
+                </thead>
+                <tbody>
+                    {% for file in files %}
+                        <tr>
+                            <td>{{ file["id"] }}</td>
+                            <td>{{ file["size"] }}</td>
+                            <td>{{ file["references"] }}</td>
+                            <td>
+                                <a href="/admin/problems/{{ problem['_id'] }}/delete"
+                                   data-ajaxify>
+                                    submit
+                                </a>
+                            </td>
+                        </tr>
+                    {% end %}
             </table>
         </div>
     </div>

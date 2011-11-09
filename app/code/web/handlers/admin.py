@@ -18,17 +18,19 @@ class AdminRootHandler(AdminBaseHandler):
     def get(self):
         self.render(
             "admin/root.html",
-            admin=self.current_user
+            user=self.current_user
         )
 
 
-@router.route(r"/admin/contestants")
-class AdminContestansHandler(AdminBaseHandler):
+@router.route(r"/admin/users")
+class AdminUsersHandler(AdminBaseHandler):
     def get(self):
+        admins = D.users.find({"type": "admin"})
         contestants = D.users.find({"type": "contestant"})
         self.render(
-            "admin/contestants.html",
-            admin=self.current_user,
+            "admin/users.html",
+            user=self.current_user,
+            admins=admins,
             contestants=contestants
         )
 
@@ -40,8 +42,8 @@ class AdminContestansHandler(AdminBaseHandler):
         self.write("Ajax.reload()")
 
 
-@router.route(r"/admin/contestants/([a-f0-9]+)/delete")
-class AdminContestantsDeleteHandler(AdminBaseHandler):
+@router.route(r"/admin/users/([a-f0-9]+)/delete")
+class AdminUsersDeleteHandler(AdminBaseHandler):
     def post(self, id_):
         D.users.remove({"_id": ObjectId(id_)})
         self.write("Ajax.reload()")
@@ -51,10 +53,22 @@ class AdminContestantsDeleteHandler(AdminBaseHandler):
 class AdminProblemsHandler(AdminBaseHandler):
     def get(self):
         problems = D.problems.find()
+        files = [
+            {
+                "id": fl["_id"],
+                "size": fl["length"],
+                "references": " ".join(( p["name"] for p in itertools.chain(
+                    D.problems.find({"output": fl["_id"]}),
+                    D.problems.find({"input": fl["_id"]})
+                ) )),
+            }
+            for fl in D.problems.fs.files.find()
+        ]
         self.render(
             "admin/problems.html",
-            admin=self.current_user,
-            problems=problems
+            user=self.current_user,
+            problems=problems,
+            files=files
         )
 
     def post(self):
@@ -78,7 +92,6 @@ class AdminProblemsHandler(AdminBaseHandler):
 class AdminProblemsFileHandler(AdminBaseHandler):
     def get(self, id_, type_):
         file_id = D.problems.find_one({"_id": ObjectId(id_)})[type_]
-        print file_id
         self.set_header("Content-Type", "text/plain")
         with ProblemsFS.get(file_id) as fh:
             self.write(fh.read())
@@ -96,12 +109,8 @@ class AdminProblemsDeleteHandler(AdminBaseHandler):
         self.write("Ajax.reload()")
 
 
-@router.route(r"/admin/problems/gc")
-class AdminProblemsGCHandler(AdminBaseHandler):
-    def post(self):
-        file_ids = frozenset(itertools.chain(
-            *[ [problem["input"], problem["output"]] for problem in D.problems.find() ]
-        ))
-        [ ProblemsFS.delete(fl["_id"])
-          for fl in D.problems.fs.files.find()
-          if fl["_id"] not in file_ids ]
+@router.route(r"/admin/problems/files/([a-f0-9]+)/delete")
+class AdminProblemsFilesDeleteHandler(AdminBaseHandler):
+    def post(self, id_):
+        ProblemsFS.delete(ObjectId(id_))
+        self.write("Ajax.reload()")

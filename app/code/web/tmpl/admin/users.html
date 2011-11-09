@@ -9,7 +9,7 @@
     <div class="row">
         <div class="span5">
             <h3>Quick Add</h3>
-            <form class="form-stacked" action="/admin/contestants" method="post" data-ajaxify>
+            <form class="form-stacked" action="/admin/users" method="post" data-ajaxify>
                 {% raw xsrf_form_html() %}
                 <fieldset>
                     <div class="clearfix">
@@ -40,7 +40,7 @@
                     <div class="clearfix">
                         <label>password</label>
                         <div class="input">
-                            <input class="span4" name="username" type="text">
+                            <input class="span4" name="password" type="text">
                         </div>
                     </div>
                     <div class="actions">
@@ -63,7 +63,30 @@
                             <td>{{ contestant["_id"] }}</td>
                             <td>{{ contestant["username"] }}</td>
                             <td>
-                                <a href="/admin/contestants/{{ contestant['_id'] }}/delete"
+                                <a href="/admin/users/{{ contestant['_id'] }}/delete"
+                                   data-ajaxify>
+                                    delete
+                                </a>
+                            </td>
+                        </tr>
+                    {% end %}
+                </tbody>
+            </table>
+
+            <h2>Admin List</h2>
+            <table class="zebra-striped">
+                <thead>
+                    <th>id</th>
+                    <th>username</th>
+                    <th>actions</th>
+                </thead>
+                <tbody>
+                    {% for admin_ in admins %}
+                        <tr>
+                            <td>{{ admin_["_id"] }}</td>
+                            <td>{{ admin_["username"] }}</td>
+                            <td>
+                                <a href="/admin/users/{{ admin_['_id'] }}/delete"
                                    data-ajaxify>
                                     delete
                                 </a>

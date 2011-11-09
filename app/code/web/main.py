@@ -1,10 +1,11 @@
 import functools
 import httplib
 import os
-import tornado.web
+import tornado.web, tornado.iostream
 
 import router
 import run
+import ui
 import util
 from db import D
 from handlers.base import BaseHandler
@@ -54,12 +55,6 @@ class LogoutHandler(BaseHandler):
 @router.route(r".*", priority=1)
 class NotFoundHandler(BaseHandler):
     def get(self):
-        return self.handle();
-
-    def post(self):
-        return self.handle();
-
-    def handle(self):
         return self.render("404.html")
 
 
@@ -72,12 +67,22 @@ settings = {
     "login_url": "/login",
     "static_path": os.path.join(ROOT_DIR, "static"),
     "template_path": os.path.join(ROOT_DIR, "tmpl"),
+    "ui_modules": ui.ui_modules,
 }
 
 if __name__ == "__main__":
     # must be called in advance of any Tornado constructors
     from zmq.eventloop import ioloop
     ioloop.install()
+
+    # hacks IOStream to ramp up upload size limit
+    def deco(method):
+        @functools.wraps(method)
+        def wrapper(self, *args, **kwargs):
+            method(self, *args, **kwargs)
+            self.max_buffer_size = 200*1024*1024 # 200 MB
+        return wrapper
+    tornado.iostream.IOStream.__init__ = deco(tornado.iostream.IOStream.__init__)
 
     application = tornado.web.Application(router.get_routes(), **settings)
     application.listen(8888)

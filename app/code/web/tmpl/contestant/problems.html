@@ -1,0 +1,92 @@
+{% extends "../base.html" %}
+
+{% block title %}Hub - Contestant{% end %}
+
+{% block topnav %}
+    {% module Template("contestant/topnav.html", user=user) %}
+{% end %}
+
+{% block content %}
+    {% module ContestantHub() %}
+    <div class="row">
+        <div class="span16">
+            <div class="page-header">
+                <h1>Hub</h1>
+            </div>
+        </div>
+        <div class="span5">
+            <h3>Submit</h3>
+            <form name="problem" class="form-stacked" action="/contestant/problems"
+                  enctype="multipart/form-data" method="post">
+                {% raw xsrf_form_html() %}
+                <fieldset>
+                    <div class="clearfix">
+                        <label>problem</label>
+                        <div class="input">
+                            <select class="span4" name="problem">
+                                {% for problem in problems %}
+                                    <option value="{{ problem['_id'] }}">
+                                        {{ problem["name"] }}
+                                    </option>
+                                {% end %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <label>language</label>
+                        <div class="input">
+                            <ul class="inputs-list">
+                                <li>
+                                    <label>
+                                        <input type="radio" name="language" value="c">
+                                        <span>C</span>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label>
+                                        <input type="radio" name="language" value="cpp">
+                                        <span>C++</span>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label>
+                                        <input type="radio" name="language" value="java">
+                                        <span>Java</span>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <label>source file</label>
+                        <div class="input">
+                            <input class="input-file span4" name="source" type="file">
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <input type="submit" class="btn primary" value="Go">
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="span11">
+            <h2>Problem List</h2>
+            <table class="zebra-striped">
+                <thead>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>actions</th>
+                </thead>
+                <tbody>
+                    {% for problem in problems %}
+                        <tr>
+                            <td>{{ problem["_id"] }}</td>
+                            <td>{{ problem["name"] }}</td>
+                            <td><a href="#{{ problem['_id'] }}">submit</a></td>
+                        </tr>
+                    {% end %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% end %}
