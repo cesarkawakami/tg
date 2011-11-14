@@ -11,3 +11,10 @@ class BaseHandler(tornado.web.RequestHandler):
             })
         except:
             return None
+
+    # this works around a annoying bug in tornado that happens when the client closes the connection
+    def finish(self, *args, **kwargs):
+        try:
+            super(BaseHandler, self).finish(*args, **kwargs)
+        except IOError:
+            pass

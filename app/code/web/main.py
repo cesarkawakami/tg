@@ -1,7 +1,7 @@
 import functools
 import httplib
 import os
-import tornado.web, tornado.iostream
+import tornado.web, tornado.iostream, tornado.ioloop, tornado.gen
 
 import router
 import run
@@ -58,6 +58,16 @@ class NotFoundHandler(BaseHandler):
         return self.render("404.html")
 
 
+@router.route(r"/test")
+class TestHandler(BaseHandler):
+    @tornado.web.asynchronous
+    @tornado.gen.engine
+    def get(self):
+        import uuid
+        answer = yield tornado.gen.Task(run.JudgingRequester.get().submit, {"id": str(uuid.uuid4())})
+        self.finish(answer)
+
+
 ROOT_DIR = os.path.dirname(__file__)
 
 settings = {
@@ -71,22 +81,18 @@ settings = {
 }
 
 if __name__ == "__main__":
-    # must be called in advance of any Tornado constructors
-    from zmq.eventloop import ioloop
-    ioloop.install()
-
     # hacks IOStream to ramp up upload size limit
-    def deco(method):
+    def hack_iostream(method):
         @functools.wraps(method)
         def wrapper(self, *args, **kwargs):
             method(self, *args, **kwargs)
             self.max_buffer_size = 200*1024*1024 # 200 MB
         return wrapper
-    tornado.iostream.IOStream.__init__ = deco(tornado.iostream.IOStream.__init__)
+    tornado.iostream.IOStream.__init__ = hack_iostream(tornado.iostream.IOStream.__init__)
 
     application = tornado.web.Application(router.get_routes(), **settings)
     application.listen(8888)
 
     run.setup()
 
-    ioloop.IOLoop.instance().start()
+    tornado.ioloop.IOLoop.instance().start()
