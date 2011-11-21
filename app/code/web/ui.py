@@ -14,5 +14,6 @@ class BaseUIModule(tornado.web.UIModule):
 class ContestantHub(BaseUIModule):
     def javascript_files(self): return [
         "jquery.history.js",
+        "channel-updater.js",
         "contestant-hub.js",
     ]

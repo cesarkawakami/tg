@@ -1,0 +1,40 @@
+\begin{thenomenclature} 
+
+ \nomgroup{A}
+
+  \item [{AIDO}]\begingroup Ambiente Integrado de Desenvolvimento Online\nomeqref {2.0}
+		\nompageref{12}
+  \item [{AMQP}]\begingroup Advanced Message Queuing Protocol\nomeqref {3.0}
+		\nompageref{23}
+  \item [{BOCA}]\begingroup Boca Online Contest Administrator\nomeqref {2.0}
+		\nompageref{17}
+  \item [{DAC}]\begingroup Discretionary access control, ou controle de acesso discricionário\nomeqref {3.0}
+		\nompageref{26}
+  \item [{DoS}]\begingroup Denial of Service\nomeqref {2.0}
+		\nompageref{16}
+  \item [{E/S}]\begingroup Entrada e saída (de dados)\nomeqref {3.0}
+		\nompageref{18}
+  \item [{GCJ}]\begingroup Google Code Jam\nomeqref {2.0}
+		\nompageref{11}
+  \item [{HTML}]\begingroup Hypertext markup language, ou linguagem de marcação para hipertexto\nomeqref {3.0}
+		\nompageref{31}
+  \item [{HTTP}]\begingroup Hypertext transfer protocol, ou protocolo de transferência de hipertexto\nomeqref {3.0}
+		\nompageref{31}
+  \item [{ICPC}]\begingroup International Collegiate Programming Contest\nomeqref {2.0}
+		\nompageref{11}
+  \item [{IOI}]\begingroup International Olympiad in Informatics\nomeqref {2.0}
+		\nompageref{11}
+  \item [{MAC}]\begingroup Mandatory access control, ou controle de acesso obrigatório\nomeqref {3.0}
+		\nompageref{29}
+  \item [{POSIX}]\begingroup Portable Operating System Interface based on *niX, ou Interface portável de sistema operacional baseado em *nix\nomeqref {3.0}
+		\nompageref{30}
+  \item [{PubSub}]\begingroup Publicação e assinatura\nomeqref {3.0}
+		\nompageref{25}
+  \item [{RPC}]\begingroup Remote Procedure Call, ou chamada remota de procedimento\nomeqref {3.0}
+		\nompageref{26}
+  \item [{SESC}]\begingroup Sistema online para execução segura de código arbitrário\nomeqref {1.0}
+		\nompageref{9}
+  \item [{URL}]\begingroup Uniform resource locator, ou localizador uniforme de recursos\nomeqref {3.0}
+		\nompageref{31}
+
+\end{thenomenclature}

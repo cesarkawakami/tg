@@ -10,13 +10,38 @@ import base
 import web.comm
 
 
+@web.router.route(r"/ide")
+class IdeHandler(base.BaseHandler):
+    def get(self):
+        self.render(
+            "ide/root.html"
+        )
+
+
+@web.router.route(r"/ide/run")
+class IdeRunHandler(base.BaseHandler):
+    @tornado.web.asynchronous
+    @gen.engine
+    def post(self):
+        request_data = {
+            "type": "ide",
+            "source": self.get_argument("source", ""),
+        }
+        print "+++++++++++ INCOMING REQ +++++++++++++++"
+        import traceback
+        traceback.print_stack()
+        print repr(self.request)
+        result = yield gen.Task(web.comm.WorkerRequester.get().request, request_data)
+        self.finish(result["result"])
+
+
 class ContestantBaseHandler(base.BaseHandler):
     @web.util.authenticated_as("contestant")
     def prepare(self):
         pass
 
 
-@web.router.route(r"/contestant")
+# @web.router.route(r"/contestant")
 class ContestantRootHandler(ContestantBaseHandler):
     def get(self):
         self.render(
@@ -25,7 +50,7 @@ class ContestantRootHandler(ContestantBaseHandler):
         )
 
 
-@web.router.route(r"/contestant/problems")
+# @web.router.route(r"/contestant/problems")
 class ContestantProblemsHandler(ContestantBaseHandler):
     def get(self):
         problems = list(D.problems.find())
@@ -69,7 +94,7 @@ class ContestantProblemsHandler(ContestantBaseHandler):
         web.comm.ContestantPublisher.get().publish({"msg": "update"}, str(self.current_user["_id"]))
 
 
-@web.router.route(r"/contestant/runs")
+# @web.router.route(r"/contestant/runs")
 class ContestantRunsHandler(ContestantBaseHandler):
     def get(self):
         runs = [
@@ -86,7 +111,7 @@ class ContestantRunsHandler(ContestantBaseHandler):
         )
 
 
-@web.router.route(r"/contestant/channel/runs")
+# @web.router.route(r"/contestant/channel/runs")
 class ContestantChannelRunsHandler(ContestantBaseHandler):
     @tornado.web.asynchronous
     @gen.engine

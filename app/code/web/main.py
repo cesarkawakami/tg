@@ -3,8 +3,9 @@ import httplib
 import os
 import tornado.web, tornado.iostream, tornado.ioloop, tornado.gen
 
+import comm
+import db
 import router
-import run
 import ui
 import util
 from db import D
@@ -56,43 +57,46 @@ class LogoutHandler(BaseHandler):
 class NotFoundHandler(BaseHandler):
     def get(self):
         return self.render("404.html")
+    def post(self):
+        raise tornado.web.HTTPError(404)
 
 
-@router.route(r"/test")
+@router.route(r"/test/([a-f0-9]+)")
 class TestHandler(BaseHandler):
     @tornado.web.asynchronous
     @tornado.gen.engine
-    def get(self):
-        import uuid
-        answer = yield tornado.gen.Task(run.JudgingRequester.get().submit, {"id": str(uuid.uuid4())})
+    def get(self, file_id):
+        answer = yield tornado.gen.Task(comm.WorkerRequester.get().request, {"type": "test", "file_id": file_id})
         self.finish(answer)
 
 
-ROOT_DIR = os.path.dirname(__file__)
+class MainWeb(object):
+    ROOT_DIR = os.path.dirname(__file__)
 
-settings = {
-    "cookie_secret": "3bQ0YcnGfW1wjP7BRLtpVkiggf4dNByRpcdy7xR7re9VPbiODURsMP8Vt7Zy",
-    "xsrf_cookies": True,
-    "debug": True,
-    "login_url": "/login",
-    "static_path": os.path.join(ROOT_DIR, "static"),
-    "template_path": os.path.join(ROOT_DIR, "tmpl"),
-    "ui_modules": ui.ui_modules,
-}
+    SETTINGS = {
+        "cookie_secret": "3bQ0YcnGfW1wjP7BRLtpVkiggf4dNByRpcdy7xR7re9VPbiODURsMP8Vt7Zy",
+        # "xsrf_cookies": True,
+        "debug": True,
+        "login_url": "/login",
+        "static_path": os.path.join(ROOT_DIR, "static"),
+        "template_path": os.path.join(ROOT_DIR, "tmpl"),
+        "ui_modules": ui.ui_modules,
+    }
 
-if __name__ == "__main__":
-    # hacks IOStream to ramp up upload size limit
-    def hack_iostream(method):
-        @functools.wraps(method)
-        def wrapper(self, *args, **kwargs):
-            method(self, *args, **kwargs)
-            self.max_buffer_size = 200*1024*1024 # 200 MB
-        return wrapper
-    tornado.iostream.IOStream.__init__ = hack_iostream(tornado.iostream.IOStream.__init__)
+    def run(self):
+        # hacks IOStream to ramp up upload size limit
+        def hack_iostream(method):
+            @functools.wraps(method)
+            def wrapper(self, *args, **kwargs):
+                method(self, *args, **kwargs)
+                self.max_buffer_size = 200*1024*1024 # 200 MB
+            return wrapper
+        tornado.iostream.IOStream.__init__ = hack_iostream(tornado.iostream.IOStream.__init__)
 
-    application = tornado.web.Application(router.get_routes(), **settings)
-    application.listen(8888)
+        application = tornado.web.Application(router.get_routes(), **self.SETTINGS)
+        application.listen(8888)
 
-    run.setup()
+        comm.setup()
+        db.init()
 
-    tornado.ioloop.IOLoop.instance().start()
+        tornado.ioloop.IOLoop.instance().start()

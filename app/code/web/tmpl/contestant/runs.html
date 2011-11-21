@@ -1,0 +1,25 @@
+<table class="zebra-striped">
+    <thead>
+        <th>id</th>
+        <th>problem</th>
+        <th>language</th>
+        <th>result</th>
+    </thead>
+    <tbody>
+        {% for run in runs %}
+            <tr>
+                <td>{{ run["_id"] }}</td>
+                <td>{{ run["problem_name"] }}</td>
+                <td>{{ run["language"] }}</td>
+                <td>
+                    {% if not run["result"] %}
+                        <img src="{{ static_url('loading.gif') }}">
+                    {% else %}
+                        {% import pprint %}
+                        {{ pprint.pformat(run["result"]) }}
+                    {% end %}
+                </td>
+            </tr>
+        {% end %}
+    </tbody>
+</table>

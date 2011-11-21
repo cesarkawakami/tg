@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block subtitle %}Problems{% end %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Runs</h1>
+    </div>
+    <div class="row">
+        <div class="span16">
+            <h2>Run List</h2>
+            <table class="zebra-striped">
+                <thead>
+                    <th>id</th>
+                    <th>user</th>
+                    <th>problem</th>
+                    <th>language</th>
+                    <th>input</th>
+                    <th>result</th>
+                    <th>actions</th>
+                </thead>
+                <tbody>
+                    {% for run in runs %}
+                        <tr>
+                            <td>{{ run["_id"] }}</td>
+                            <td>{{ run["user"] }}</td>
+                            <td>{{ run["problem"] }}</td>
+                            <td>{{ run["language"] }}</td>
+                            <td>TBI</td>
+                            <td>{{ "..." if run["result"] is None else run["result"] }}</td>
+                            <td>
+                                <a href="/admin/runs/{{ run['_id'] }}/delete" data-ajaxify>
+                                    delete
+                                </a>
+                            </td>
+                        </tr>
+                    {% end %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% end %}

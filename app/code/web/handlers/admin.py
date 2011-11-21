@@ -1,19 +1,20 @@
 import base
 import itertools
-import router
-import util
-
 from bson.objectid import ObjectId
-from db import D, ProblemsFS
+
+import web.router
+import web.util
+from web.db import D, ProblemsFS
+
 
 
 class AdminBaseHandler(base.BaseHandler):
-    @util.authenticated_as("admin")
+    @web.util.authenticated_as("admin")
     def prepare(self):
         pass
 
 
-@router.route(r"/admin")
+@web.router.route(r"/admin")
 class AdminRootHandler(AdminBaseHandler):
     def get(self):
         self.render(
@@ -22,7 +23,7 @@ class AdminRootHandler(AdminBaseHandler):
         )
 
 
-@router.route(r"/admin/users")
+@web.router.route(r"/admin/users")
 class AdminUsersHandler(AdminBaseHandler):
     def get(self):
         admins = D.users.find({"type": "admin"})
@@ -42,14 +43,14 @@ class AdminUsersHandler(AdminBaseHandler):
         self.write("Ajax.reload()")
 
 
-@router.route(r"/admin/users/([a-f0-9]+)/delete")
+@web.router.route(r"/admin/users/([a-f0-9]+)/delete")
 class AdminUsersDeleteHandler(AdminBaseHandler):
     def post(self, id_):
         D.users.remove({"_id": ObjectId(id_)})
         self.write("Ajax.reload()")
 
 
-@router.route(r"/admin/problems")
+@web.router.route(r"/admin/problems")
 class AdminProblemsHandler(AdminBaseHandler):
     def get(self):
         problems = D.problems.find()
@@ -88,7 +89,7 @@ class AdminProblemsHandler(AdminBaseHandler):
         self.redirect("/admin/problems")
 
 
-@router.route(r"/admin/problems/([a-f0-9]+)/(input|output)")
+@web.router.route(r"/admin/problems/([a-f0-9]+)/(input|output)")
 class AdminProblemsFileHandler(AdminBaseHandler):
     def get(self, id_, type_):
         file_id = D.problems.find_one({"_id": ObjectId(id_)})[type_]
@@ -97,7 +98,7 @@ class AdminProblemsFileHandler(AdminBaseHandler):
             self.write(fh.read())
 
 
-@router.route(r"/admin/problems/([a-f0-9]+)/delete")
+@web.router.route(r"/admin/problems/([a-f0-9]+)/delete")
 class AdminProblemsDeleteHandler(AdminBaseHandler):
     def post(self, id_):
         problem = D.problems.find_one({"_id": ObjectId(id_)})
@@ -109,8 +110,26 @@ class AdminProblemsDeleteHandler(AdminBaseHandler):
         self.write("Ajax.reload()")
 
 
-@router.route(r"/admin/problems/files/([a-f0-9]+)/delete")
+@web.router.route(r"/admin/problems/files/([a-f0-9]+)/delete")
 class AdminProblemsFilesDeleteHandler(AdminBaseHandler):
     def post(self, id_):
         ProblemsFS.delete(ObjectId(id_))
+        self.write("Ajax.reload()")
+
+
+@web.router.route(r"/admin/runs")
+class AdminRunsHandler(AdminBaseHandler):
+    def get(self):
+        runs = D.runs.find()
+        self.render(
+            "admin/runs.html",
+            user=self.current_user,
+            runs=runs
+        )
+
+
+@web.router.route(r"/admin/runs/([a-f0-9]+)/delete")
+class AdminRunsDeleteHandler(AdminBaseHandler):
+    def post(self, id_):
+        D.runs.remove(ObjectId(id_))
         self.write("Ajax.reload()")

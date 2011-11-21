@@ -1,7 +1,7 @@
 import tornado.web
 
 from bson.objectid import ObjectId
-from db import D
+from web.db import D
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):

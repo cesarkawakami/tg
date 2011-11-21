@@ -1,0 +1,57 @@
+{% extends "../base.html" %}
+
+{% block title %}IDE{% end %}
+
+
+{% block head %}
+    <script src="{{ static_url('channel-updater.js') }}"></script>
+    <script src="{{ static_url('ide.js') }}"></script>
+{% end %}
+
+{% block content %}
+    <div class="row">
+        <div class="span16">
+            <div class="page-header">
+                <h1>IDE Online</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span12 offset2">
+            <h2 id="code">1. Code...</h2>
+            <form name="main" class="form-stacked" action="/ide/run" method="post">
+                {% raw xsrf_form_html() %}
+                <fieldset>
+                    <div class="clearfix">
+                        <label>language</label>
+                        <div class="input">
+                            <ul class="inputs-list">
+                                <li>
+                                    <label>
+                                        <input type="radio" name="language" value="cpp" checked>
+                                        <span>C++</span>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <label>source code</label>
+                        <div class="input">
+                            <textarea class="span11" name="source" rows="20" style="font-family: monospace;"></textarea>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <input type="submit" class="btn primary" value="Run">
+                    </div>
+                </fieldset>
+            </form>
+
+            <h2 id="result">
+                2. ...and check out the result!
+                <small><a href="javascript:goToByScroll($('#code'))">go back to code</a></small>
+            </h2>
+            <pre id="result_value">&nbsp;</pre>
+        </div>
+    </div>
+{% end %}

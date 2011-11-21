@@ -1,0 +1,1 @@
+language=cpp&source=%23include+%3Ccstdio%3E%0D%0A%0D%0Aint+main()+%7B%0D%0A++++int+k%3B%0D%0A++++for+(int+i+%3D+0%3B+i+%3C+50*1000*1000%3B+%2B%2Bi)%0D%0A++++++++k+%2F%3D+k%3B%0D%0A++++for+(int+i+%3D+0%3B+i+%3C+50%3B+%2B%2Bi)%0D%0A++++++++printf(%22Hello%2C+world!+%25d+%25d%5Cn%22%2C+i%2C+k)%3B%0D%0A++++return+0%3B%0D%0A%7D
