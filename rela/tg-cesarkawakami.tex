@@ -14,6 +14,7 @@
 \usepackage[num]{abntcite}
 \usepackage{nomencl}\makenomenclature
 \usepackage{afterpage}
+\usepackage{pdfpages}
 
 
 %%%
@@ -22,7 +23,7 @@
 \autor{Cesar Ryudi Kawakami}
 \titulo{Sistemas online para execução segura de código arbitrário}
 \orientador{Prof. Armando Ramos Gouveia (ITA)}
-\instituicao{Instituto Tecnológico de Aeronáutica}
+\instituicao{Instituto Tecnológico de Aeronáutica\par Divisão de Ciência da Computação}
 \local{São José dos Campos}
 \data{2011}
 
@@ -74,28 +75,40 @@
 %%%
 
 \begin{document}
+
 \pagenumbering{alph}
-\folhaderosto
+
+\includepdf{capa}
+
 \pagenumbering{arabic}
-\begin{folhadeaprovacao}
-	\setlength\ABNTsignwidth{10cm}
-	\setlength\ABNTsignthickness{0.4pt}
-	\setlength\ABNTsignskip{3cm}
-	\begin{center}
-		\textbf{Sistemas online para execução segura de código arbitrário}
-		
-		Esta publicação foi aceita como Relatório Final de Trabalho de Graduação
-	\end{center}
-	\assinatura{Cesar Ryudi Kawakami \\ Autor}
-	
-	\assinatura{Prof. Armando Ramos Gouveia \\ Orientador}
-	
-	\assinatura{Prof. Carlos Henrique Costa Ribeiro \\ Coordenador do Curso de Engenharia de Computação}
-	\vfill
-	\begin{center}
-		São José dos Campos, DATA DE APROVAÇÃO
-	\end{center}
-\end{folhadeaprovacao}
+
+\includepdf{rosto}
+
+%\folhaderosto
+
+\includepdf{versorosto}
+
+\includepdf{aprovacao}
+
+%\begin{folhadeaprovacao}
+%	\setlength\ABNTsignwidth{10cm}
+%	\setlength\ABNTsignthickness{0.4pt}
+%	\setlength\ABNTsignskip{3cm}
+%	\begin{center}
+%		\textbf{Sistemas online para execução segura de código arbitrário}
+%		
+%		Esta publicação foi aceita como Relatório Final de Trabalho de Graduação
+%	\end{center}
+%	\assinatura{Cesar Ryudi Kawakami \\ Autor}
+%	
+%	\assinatura{Prof. Armando Ramos Gouveia \\ Orientador}
+%	
+%	\assinatura{Prof. Carlos Henrique Costa Ribeiro \\ Coordenador do Curso de Engenharia de Computação}
+%	\vfill
+%	\begin{center}
+%		São José dos Campos, 2 de dezembro de 2011
+%	\end{center}
+%\end{folhadeaprovacao}
 
 \begin{resumo}
 Um sistema online para execução segura de código arbitrário é um sistema computacional voltado para a Internet que permita a execução segura de código proveniente de fontes não-confiáveis. A execução segura de código arbitrário é um tema pouco abordado na área de sistemas operacionais, uma vez que, em geral, assume-se que o usuário será o responsável pelos processos disparados. Os objetivos imediatos deste trabalho são fazer uma exposição dos casos de uso considerados para então elaborar uma arquitetura detalhada de um sistema que resolve o problema e montar um protótipo funcional. São estudadas duas aplicações: competições de programação, que avaliam os competidores executando seus códigos contra uma bateria secreta de testes, e as IDEs online, que permitem a execução de código sem necessitar da instalação de ambientes locais de desenvolvimento. Um levantamento é feito sobre os poucos sistemas já existentes que abordam os mesmos problemas. São descritas as principais tecnologias utilizadas e respectivas fundamentações teóricas durante o trabalho, incluindo Tornado, MongoDB, RabbitMQ, AppArmor e long polling. É apresentado o projeto de um sistema online para execução segura de código arbitrário. São descritas as considerações de design feitas, bem como as estratégias arquiteturais escolhidas, que incluem o uso de programação de alto nível, o uso de escalabilidade horizontal como meio para obtenção de performance e a segurança em profundidade. É apresentada a arquitetura do sistema, com uma exposição sobre a sua visão geral, bem como a arquitetura dos subsistemas, o modelo de segurança e os protocolos de comunicação. Finalmente, um protótipo funcional para cada um dos casos de uso estudados é mostrado, seguido de uma breve análise de validação. O protótipo apresentou-se performante, com escalabilidade horizontal linear e resistente aos ataques testados. No futuro, pode ser feito um aprofundamento sobre as possibilidades criadas por sistemas seguros para execução de código arbitrário, bem como sobre a problemática envolvida na elaboração de sistemas mais completos para o problema estudado.
@@ -250,7 +263,7 @@ Neste capítulo, faremos uma exposição das ferramentas e das tecnologias abord
 	\item O \emph{MongoDB,} um banco de dados de alta performance orientado a documentos;
 	\item O \emph{RabbitMQ,} um \emph{middleware} orientado a mensagens para computação distribuída;
 	\item O \emph{AppArmor,} um sistema de controle de acesso obrigatório para \emph{kernels} Linux;
-	\item Long polling.
+	\item O \emph{long polling,} uma técnica que permite o desenvolvimento de aplicações com comunicação \emph{push} num meio tradicionalmente \emph{pull} como a \emph{web.}
 \end{itemize}	
 	
 \section{Tornado}
@@ -263,11 +276,11 @@ Para administrar um grande número de conexões simultaneamente, o Tornado utili
 
 \subsection{Servidores com E/S síncrona}
 
-Servidores \emph{web} tradicionais, como o Apache em sua implementação usual, fazem uso de uma abordagem \emph{síncrona,} ou seja, comandos de \emph{entrada e saída} (E/S) interrompem a execução do programa até o seu término. Programas desenhados desta maneira obtém paralelismo através do uso de múltiplas \emph{threads} administradas pelo sistema operacional \figref{multithreaded-webservers}.
+Servidores \emph{web} tradicionais, como o Apache em sua implementação usual, fazem uso de uma abordagem \emph{síncrona,} ou seja, comandos de \emph{entrada e saída} (E/S) interrompem a execução do programa até o término do comando, impedindo a aplicação de, por exemplo, atender a outras requisições de clientes. Programas desenhados desta maneira obtém paralelismo através do uso de múltiplas \emph{threads} administradas pelo sistema operacional \figref{multithreaded-webservers}. Cada conexão iniciada dispara uma nova \emph{thread} e, assim, o servidor passa a ser capaz de atender a mais de uma requisição simultaneamente.
 
 \figcustom{multithreaded-webservers}{Servidores \emph{web} síncronos com paralelismo por \emph{multithreading}}{bp}{.9}
 
-Essa abordagem apresenta um grave problema de escalabilidade: os sistemas operacionais, por \emph{design,} apresentam um custo relativamente grande associado a cada \emph{troca de contexto\footnote{Situação em que uma thread tem sua execução interrompida para ceder seu tempo de CPU para outra.}}. A criação em massa de \emph{threads} causada pelos servidores em questão, em conjunto com os custos computacionais envolvidos na administração de múltiplas threads, sobrecarrega o sistema, chegando a uma situação na qual gasta-se mais tempo de CPU em trocas de contexto do que executando as tarefas em si.
+Essa abordagem apresenta um grave problema de escalabilidade: os sistemas operacionais, por \emph{design,} apresentam um custo relativamente grande associado a cada \emph{troca de contexto\footnote{Situação em que uma thread tem sua execução interrompida para ceder seu tempo de CPU para outra. O ato de interromper a execução também é conhecido como \emph{preempção.}},} uma vez que oferecem uma série de garantias a cada \emph{thread,} como, por exemplo, isolamento das demais \emph{threads} executando no sistema. A criação em massa de \emph{threads} causada pelos servidores em questão, em conjunto com os custos computacionais envolvidos na administração de múltiplas threads, sobrecarrega o sistema, chegando a uma situação na qual gasta-se mais tempo de CPU em trocas de contexto do que executando as tarefas em si.
 
 \subsection{A E/S assíncrona do Tornado}
 
@@ -275,7 +288,7 @@ Na abordagem \emph{assíncrona} adotada pelo Tornado, uma mesma \emph{thread} é
 
 \fig{tornado-ioloop}{Diagrama de fluxo do atendimento de uma requisição em Tornado}
 
-A cada requisição de E/S, o código de atendimento \emph{cede,} num paradigma muito semelhante ao multithreading cooperativo, o controle ao \emph{IO loop,} que retornará o controle ao atendimento quando a operação de E/S estiver concluída.
+A cada requisição de E/S, o código de atendimento \emph{cede,} num paradigma muito semelhante ao multithreading cooperativo, o controle ao \emph{IO loop,} que retornará o controle ao atendimento quando a operação de E/S estiver concluída. Para isso, o código de atendimento, ao ceder, envia também ao IO loop uma função de \emph{callback,} que será chamada quando a requisição de E/S estiver terminada. Observe que todo o processo ocorre sem troca excessiva de dados e dentro de um único processo.
 
 A abordagem adotada torna o atendimento de uma requisição uma operação muito leve, sendo que o programa inteiro é executado em apenas uma \emph{thread} do sistema operacional, causando uma diminuição significativa dos recursos consumidos quando comparada com uma implementação por \emph{threads.} Além disso, o servidor torna-se mais escalável, restringindo o sistema apenas às capacidades do computador em si, e não dos limites de processamento de threads do sistema operacional~--- em outras palavras, aumenta-se a escalabilidade vertical dos servidores. O servidor e framework Tornado é o sistema de escolha para a implementação deste projeto.
 
@@ -287,13 +300,15 @@ O \emph{design} orientado a documentos utilizado pelo MongoDB possibilita alta p
 
 \subsection{Bancos de dados relacionais}
 
-No paradigma relacional, um banco de dados se constitui por uma coleção de relações, frequentemente chamadas de tabelas. O modelamento dos dados armazenados usualmente se faz por meio da chamada \emph{normalização,} na qual eliminam-se relações que não são fundamentalmente simples, quebrando-as em relações mais simples, além de qualquer redundância nos dados. Tal modelamento não faz uso das características em uso da aplicação, dependendo apenas dos dados a serem armazenados. Neste modelo, a recuperação de dados completos, normalmente separados em várias relações, se faz através do uso dos chamados \emph{joins,} operações que associam relações e retornam ao cliente uma estrutura completa.
+No paradigma relacional, um banco de dados se constitui por uma coleção de relações, frequentemente chamadas de tabelas. Cada tabela armazena informações sobre uma estrutura fixa, contendo sempre a mesma estrutura de dados~--- em geral, é tarefa difícil executar a alteração da estrutura de uma relação. O modelamento dos dados armazenados usualmente se faz por meio da chamada \emph{normalização,} na qual eliminam-se relações que não são fundamentalmente simples, quebrando-as em relações mais simples, além de qualquer redundância nos dados. Tal modelamento não faz uso das características em uso da aplicação, dependendo apenas dos dados a serem armazenados.
 
-O problema surge quando se deseja escalar horizontalmente os bancos de dados relacionais a um número significativo de servidores. Devido ao desconhecimento dos padrões de uso da aplicações por parte do modelo, a escalabilidade horizontal dos bancos de dados relacionais se dá através do \emph{estilhaçamento} dos dados de cada relação, no qual, de acordo com um critério de aleatoriedade ou que garanta a igualidade, os dados são distribuídos entre os diversos servidores de bancos de dados. Isso torna as operações de \emph{join} significativamente mais complexas, envolvendo diversos servidores com uma troca aparentemente desordenada de informações, e muito mais custosas.
+A título de exemplo, para o armazenamento do inventário de uma loja de artigos esportivos, poderíamos ter a relação \emph{modelo,} que referenciaria a relação \emph{marca} (uma marca pode ter vários modelos, mas um modelo tem apenas uma marca), e teríamos também a relação \emph{item} (um modelo pode ter vários itens, de diferentes cores, por exemplo, mas cada item é de apenas um modelo). Neste modelo, a recuperação de dados completos de um modelo, por exemplo, separados em várias relações, se faz através do uso dos chamados \emph{joins,} operações que associam relações, ``montam'' e retornam ao cliente uma estrutura completa.
+
+O problema surge quando se deseja escalar horizontalmente os bancos de dados relacionais a um número significativo de servidores. Devido ao desconhecimento dos padrões de uso da aplicações por parte do modelo, a escalabilidade horizontal dos bancos de dados relacionais se dá através do \emph{estilhaçamento} dos dados de cada relação, no qual, de acordo com um critério de aleatoriedade ou que garanta a igualdade, os dados de uma relação são distribuídos entre os diversos servidores de bancos de dados. Por exemplo, enquanto os dados do modelo X podem estar no servidor A, os dados dos itens Y e Z (ambos do modelo X) podem estar nos servidores B e C, todos distintos. Isso torna as operações de \emph{join} significativamente mais complexas, envolvendo diversos servidores com uma troca aparentemente desordenada e muito custosa de informações.
 
 Um percalço ainda maior surge quando são consideradas alterações aos bancos de dados. Devido à natureza espalhada que os dados adquirem quando normalizados (que os colocam em diversas relações) e estilhaçados (que colocam os elementos de cada relação em diversos servidores), as alterações, a fim de preservar a consistência dos dados, são usualmente encapsuladas em \emph{transações}~--- conjuntos de operações que, em grupo, preservam as características de \emph{atomicidade,} \emph{consistência,} \emph{isolamento} e \emph{durabilidade} que são as características essenciais de qualquer banco de dados. A questão é que transações em sistemas distribuídos são obrigadas a sincronizar (travar) recursos em todas as máquinas afetadas, diminuindo drasticamente a performance do sistema: um conjunto de máquinas atuando em sincronia age, efetivamente, na velocidade de uma única máquina.
 
-Atendo-se aos sistemas relacionais, a solução usualmente adotada passa pela chamada \emph{denormalização} dos dados, que essencialmente procura aglomerar na mesma relação aqueles dados que costumem ser lidos e escritos de maneira conjunta na aplicação. Desta maneira, diminui-se a necessidade tanto de \emph{joins} quanto de transações distribuídas, possibilitando uma maior escalabilidade horizontal de tais sistemas. No entanto, tal abordagem foge da filosofia original de desenho de tais bancos de dados, o que apresenta desafios significativos. Além disso, perde-se a maioria das vantagens apresentadas pelos bancos de dados relacionais, como o forte estruturamento dos dados armazenados.
+Atendo-se aos sistemas relacionais, a solução usualmente adotada passa pela chamada \emph{denormalização} dos dados, que essencialmente procura aglomerar na mesma relação aqueles dados que costumem ser lidos e escritos de maneira conjunta na aplicação. A aplicação do inventário de artigos esportivos poderia, por exemplo, manter já na relação de modelo todas as informações referentes à marca e a cada um dos itens. Desta maneira, diminui-se a necessidade tanto de \emph{joins} quanto de transações distribuídas, possibilitando uma maior escalabilidade horizontal de tais sistemas. No entanto, tal abordagem foge da filosofia original de desenho de tais bancos de dados, o que apresenta desafios significativos; as relações de bancos de dados relacionais não foram desenhadas para suportar alterações estruturais com facilidade. Além disso, perde-se a maioria das vantagens apresentadas pelos bancos de dados relacionais, como o forte estruturamento dos dados armazenados.
 
 \subsection{Bancos de dados orientados a documento}
 
@@ -303,7 +318,7 @@ Dentro da classe dos \emph{NoSQL,} destacam-se os bancos de dados orientados a \
 
 De maneira geral, os documentos são endereçados no banco de dados através de um identificador único, em paralelo ao conceito de chave primária no modelo relacional. Sendo assim, o acesso aos documentos pode ser realizado através desse identificador único. Por outro lado, uma das funcionalidades características do modelo orientado a documento é a capacidade de realizar buscas e demais operações sobre os documentos com base nos conteúdos dos mesmos, ainda que seus conteúdos não ofereçam, todos, a mesma estrutura. Neste caso, o modelo orientado a documento equipara o modelo relacional no poder de busca, se não o ultrapassa.
 
-O efetivo uso dos bancos de dados orientados a documento requer o correto uso do \emph{modelamento orientado a documento,} que se distancia de maneira razoável do paradigma relacional. De maneira geral, relacionamentos entre entidades do tipo ``contém-um,'' como a relação entre uma uma mão e as cartas que possui, são modelados por \emph{embutimento,} ou seja, as cartas são, todas, colocadas diretamente no documento da mão. Enquanto tal abordagem causa redundâncias no banco de dados, torna muito mais rápido o acesso se este for comum às mãos como um todo e não às cartas em si. Nas aplicações práticas, a grande maioria dos acessos a bancos de dados se caracteriza por este padrão aglomerado.
+O efetivo uso dos bancos de dados orientados a documento requer o correto uso do \emph{modelamento orientado a documento,} que se distancia de maneira razoável do paradigma relacional. De maneira geral, relacionamentos entre entidades do tipo ``contém-um,'' como a relação entre uma uma mão e as cartas que possui, são modelados por \emph{embutimento,} ou seja, as cartas são, todas, colocadas diretamente no documento que corresponde à mão. Enquanto tal abordagem causa redundâncias no banco de dados, torna muito mais rápido o acesso se o caso de uso mais comum seja o acesso à mão como um todo ao invés de cada carta individual. Nas aplicações práticas, a grande maioria dos acessos a bancos de dados se caracteriza por este padrão aglomerado.
 
 Devido ao aglomeramento de informações relacionadas e consequente ausência da necessidade de \emph{joins,} bancos de dados orientados a documento podem ser escalados horizontalmente a um número significativamente grande de servidores. No caso específico do MongoDB, a escalabilidade se dá, novamente, através do estilhaçamento dos dados~--- porém, agora, como os componentes de cada informação não se encontram espalhados entre vários servidores, cada requisição atinge apenas um servidor, fazendo o que o sistema reaja quase linearmente ao aumento no número de servidores, numa performance quase ótima.
 
@@ -321,23 +336,23 @@ O RabbitMQ implementa o protocolo \emph{Advanced Message Queuing Protocol} (AMQP
 
 No padrão de \emph{distribuição de tarefas} \figref{rabbitmq-workqueue}, também conhecido como \emph{enfileiramento} ou \emph{despachamento} de tarefas, um produtor produz tarefas custosas, que são enfileiradas e, então, distribuídas a um grupo de consumidores/trabalhadores que efetuarão o processamento dessas tarefas. O produtor envia mensagens para um servidor RabbitMQ, que mantém a fila; este, por sua vez, redireciona as mensagens aos consumidores.
 
-\fig{rabbitmq-workqueue}{Padrão de troca de mensagens por distribuição de tarefas}
+\figcustom{rabbitmq-workqueue}{Padrão de troca de mensagens por distribuição de tarefas}{tp}{1}
 
 O protocolo é construído de maneira a ser altamente resiliente a falhas: cada trabalhador é obrigado a enviar um \emph{acknowledgement} \figref{rabbitmq-worker} para o RabbitMQ, indicando a conclusão da tarefa. Apenas assim a tarefa é removida da memória do servidor de fila. Caso o consumidor sofra uma queda enquanto processa a tarefa, nenhum dado é perdido: o servidor de fila detecta a queda pela falha de conexão, e imediatamente repassa a tarefa a outro consumidor.
 
 Tal protocolo também permite o chamado \emph{enfileiramento justo,} no qual cada consumidor apenas recebe uma nova mensagem quando termina de processar a anterior~--- ou seja, apenas quando o servidor de fila recebe o \emph{acknowledgement} da tarefa corrente. Essa prática uniformiza a carga entre os consumidores no caso de tarefas com tempos de execução muito heterogêneos.
 
-\figsmall{rabbitmq-worker}{Estados simplificados de um consumidor no protocolo AMPQ}
+\figcustom{rabbitmq-worker}{Estados simplificados de um consumidor no protocolo AMPQ}{tp}{0.6}
 
 \subsection{Troca de mensagens por publicação e assinatura}
 
 \nomenclature{PubSub}{Publicação e assinatura}
 
-No padrão de \emph{publicação e assinatura} (PubSub) \figref{rabbitmq-pubsub}, o produtor \emph{publica} mensagens em uma determinada categoria. Os consumidores que se interessarem, por sua vez, \emph{assinam} essa categoria, passando, assim, a receber as mensagens referentes à mesma. No AMQP, tal padrão pode ser implementado com o auxílio dos chamados \emph{exchanges,} (em azul) que são estruturas que agem como roteadores de mensagens.
+No padrão de \emph{publicação e assinatura} (PubSub) \figref{rabbitmq-pubsub}, o produtor \emph{publica} mensagens em uma determinada categoria. Os consumidores que se interessarem, por sua vez, \emph{assinam} essa categoria, passando, assim, a receber as mensagens referentes à mesma. No AMQP, tal padrão pode ser implementado com o auxílio dos chamados \emph{exchanges,}  que são estruturas que agem como roteadores de mensagens.
 
 No caso específico do PubSub, os \emph{exchanges} são configurados para despachar as mensagens para todas as filas inscritas à ele. Para efetuar a assinatura, o consumidor, então, cria uma fila temporária para si~--- que apenas será válida enquanto estiver conectado~--- e a anexa (ou inscreve) ao \emph{exchange} desejado, passando, então, a receber as mensagens que deseja. Observe que tanto as filas como os \emph{exchanges} são totalmente administrados pelo servidor RabbitMQ.
 
-\fig{rabbitmq-pubsub}{Padrão de troca de mensagens por publicação e assinatura}
+\figcustom{rabbitmq-pubsub}{Padrão de troca de mensagens por publicação e assinatura}{tp}{1}
 
 \subsection{Troca de mensagens por chamada remota de procedimento}
 
@@ -363,7 +378,7 @@ O \emph{AppArmor} (de ``Application Armor'', ou ``armadura para aplicações'') 
 
 No \emph{controle de acesso discricionário} (DAC, de \emph{discretionary access control}), os usuários do sistema têm total liberdade para repassar as suas permissões para as aplicações que executa~--- o acesso das aplicações fica à \emph{discrição} do usuário. Durante a execução de uma \emph{system call,} sistemas que implementam acesso apenas discricionário levam em conta, somente, as permissões do usuário/grupo sob o qual o processo é executado \figref{syscalls-dac}. 
 
-\figcustom{syscalls-dac}{Sistema de segurança por \emph{controle de acesso discricionário.}}{bp}{.8}
+\figcustom{syscalls-dac}{Sistema de segurança por \emph{controle de acesso discricionário.}}{tp}{.8}
 
 Sendo assim, fixados os parâmetros de usuário e grupo, um processo possui a mesma gama de permissões de qualquer outro processo rodando sob o mesmo usuário, independentemente de sua natureza. Além disso, como o desenho de sistemas DAC tem por fundamento justamente a discrição do usuário quanto a execução dos aplicativos, a checagem de permissões é feita através de uma \emph{blacklist} de permissões~--- ou seja, existe uma lista de permissões que são \emph{negadas,} e qualquer outro acesso requisitado é liberado.
 
@@ -375,7 +390,7 @@ O DAC, então, \emph{assume} que o usuário tem pleno domínio das ações e apl
 
 No \emph{controle de acesso obrigatório} (MAC, de \emph{mandatory access control}), cada processo é submetido a um controle \emph{individual} das capacidades que possui, \emph{independentemente} do usuário/grupo a que está subordinado. Sistemas MAC são usualmente implementados como uma \emph{suplementação} ao DAC. Durante a execução de uma \emph{system call,} sistemas MAC incorporam na rotina de checagem de permissões as especificações específicas ao processo sob análise \figref{syscalls-mac}.
 
-\figcustom{syscalls-mac}{Sistema de segurança por \emph{controle de acesso obrigatório.}}{bp}{.8}
+\figcustom{syscalls-mac}{Sistema de segurança por \emph{controle de acesso obrigatório.}}{tp}{.8}
 
 A obrigatoriedade do controle de acesso vem da independência do sistema de usuários e grupos. Se um determinado processo encontra-se configurado de acordo com um certo conjunto de capacidades no sistema, esse processo reterá tal conjunto de capacidades~--- ou um subconjunto desses, se outros perfis para o mesmo processo estiverem ativos, mas nunca um superconjunto~--- independentemente do usuário/grupo sob o qual é executado. Se um processo \verb|A| está submetido ao conjunto de capacidades \verb|B|, ele estará submetido a esse mesmo conjunto de capacidades mesmo que rode sob a conta do superusuário \emph{root.}
 
@@ -428,9 +443,9 @@ Ao mesmo tempo, as tecnologias hoje utilizadas para comunicação na World Wide 
 
 Para contornar essas limitações, foram desenvolvidas algumas técnicas para o uso de \emph{push} sobre uma conexão normal HTTP, entre as quais a mais proeminente é chamada de \emph{long polling} \figref{webmodel-longpolling}. Nesta técnica, o cliente faz uma requisição HTTP da maneira usual, mas dedicada exclusivamente ao seu uso no long polling. O servidor, então, \emph{não} emite resposta e deixa a conexão \emph{aberta}, aguardando alguma atualização nova a ser enviada para o cliente. Quando algum evento do lado do servidor deve ser transferido para o cliente, o servidor faz uso do long polling e envia a nova informação como \emph{resposta} à conexão que já estava aberta.
 
-O long polling faz uso das funcionalidades existentes atualmente nos protocolos \emph{web,} ainda que as use com intuito para o qual não foram desenhadas. Seu uso é bastante comum nas aplicações que necessitam de atualização dos clientes em tempo real, como mensagens instantâneas. Devido a ser, essencialmente, a única abordagem para a implementação de \emph{push} sobre HTTP que funciona nos padrões atuais, o long polling foi a técnica de escolha no desenho deste projeto.
+O long polling faz uso das funcionalidades existentes atualmente nos protocolos \emph{web,} ainda que as use com um intuito para o qual não foram desenhadas. Seu uso é bastante comum nas aplicações que necessitam de atualização dos clientes em tempo real, como mensagens instantâneas. Devido a ser, essencialmente, a única abordagem para a implementação de \emph{push} sobre HTTP que funciona nos padrões atuais, o long polling foi a técnica de escolha no desenho deste projeto.
 
-\figcustom{webmodel-longpolling}{Requisições \emph{long polling} ao longo do tempo.}{bp}{.8}
+\figcustom{webmodel-longpolling}{Requisições \emph{long polling} ao longo do tempo.}{tp}{.8}
 
 
 
@@ -446,7 +461,7 @@ Neste capítulo, será descrito um projeto de sistema online para execução seg
 
 Finalmente, exibiremos um protótipo de sistema online para execução segura de código arbitrário, explicando as duas interfaces implementadas para os casos de uso considerados, bem como resultados sobre a segurança e a escalabilidade do protótipo.
 
-\section{Considerações de \emph{design}}
+\section{Requisitos e considerações de \emph{design}}
 
 Ao longo do projeto de um sistema de software, um número de considerações e hipóteses têm de ser feitas a fim de servir como base para a elaboração de uma arquitetura e sua respectiva implementação. Neste projeto em específico, foi considerado o seguinte.
 
@@ -489,7 +504,7 @@ Por ser uma linguagem de alto nível com a qual o autor deste projeto está fami
 
 Os métodos arquiteturais pelos quais se projeta como se dá o crescimento da capacidade de sistemas, de modo geral, recaem sobre duas categorias: a escalabilidade \emph{horizontal,} e a escalabilidade \emph{vertical.}
 
-Na escalabilidade \emph{vertical,} recursos são adicionados os nós do sistema, com a finalidade de aumentar suas capacidades. Por exemplo, um sistema pode ser verticalmente escalado através da adição de mais processadores ou memória aos nós e fazendo a aplicação fazer uso dessa capacidade expandida. O principal obstáculo é o fato de que o custo marginal sobre o aumento dos recursos de um nó específico \emph{cresce,} não decai, conforme a quantidade de recursos atravessa determinado ponto~--- só se pode colocar recursos de maneira barata dentro de um meso sistema integrado até certo ponto. Sistemas que dependem de escala vertical para crescer são, portanto, extremamente caros.
+Na escalabilidade \emph{vertical,} recursos são adicionados os nós do sistema, com a finalidade de aumentar suas capacidades. Por exemplo, um sistema pode ser verticalmente escalado através da adição de mais processadores ou memória aos nós e fazendo a aplicação fazer uso dessa capacidade expandida. O principal obstáculo é o fato de que o custo marginal sobre o aumento dos recursos de um nó específico \emph{cresce,} não decai, conforme a quantidade de recursos atravessa determinado ponto~--- só se pode colocar recursos de maneira barata dentro de um mesmo sistema integrado até certo ponto, a partir do qual qualquer aumento de performance requer investimentos significativos. Sistemas que dependem de escala vertical para crescer são, portanto, extremamente caros.
 
 Em contrapartida, na escalabilidade \emph{horizontal,} mais nós da mesma categoria dos já existentes são adicionados a um sistema distribuído. Por exemplo, em sistemas aplicáveis, um servidor web pode passar a atender mais clientes aumentando de um para três o número de máquinas servindo as páginas. Neste caso, é necessário que a arquitetura dos sistemas em questão suporte a escala horizontal, ou seja, que ela consiga fazer uso da capacidade daqueles nós eventualmente adicionados.
 
@@ -507,9 +522,10 @@ Em função do conjunto de considerações e estratégias arquiteturais, e com b
 
 \subsection{Visão geral}
 
+O projeto da arquitetura geral do sistema \figref{architecture} leva em conta as questões de escalabilidade e segurança. Nele, os clientes comunicam-se com balanceadores de carga,\footnote{Balanceadores de carga são dispositivos usualmente implementados em hardware capazes de apresentar, de um lado, um único endereço de IP para as máquinas clientes, e, de outro, o balanceamento da carga entre os servidores conectados ao balanceador. São dispositivos de uso padrão em aplicações web com múltiplos servidores de aplicação.} que distribuem a carga entre os servidores web rodando sobre o Tornado. O servidores web têm acesso direto aos servidores de bancos de dados MongoDB e também ao \emph{middleware} de mensagens RabbitMQ. O RabbitMQ, por sua vez, distribui as tarefas que recebe entre os servidores de execução.
+
 \afterpage{\clearpage}
 \figcustom{architecture}{Visão geral da arquitetura do sistema}{bp}{.9}
-O projeto da arquitetura geral do sistema \figref{architecture} leva em conta as questões de escalabilidade e segurança. Nele, os clientes comunicam-se com balanceadores de carga,\footnote{Balanceadores de carga são dispositivos usualmente implementados em hardware capazes de apresentar, de um lado, um único endereço de IP para as máquinas clientes, e, de outro, o balanceamento da carga entre os servidores conectados ao balanceador. São dispositivos de uso padrão em aplicações web com múltiplos servidores de aplicação.} que distribuem a carga entre os servidores web rodando sobre o Tornado. O servidores web têm acesso direto aos servidores de bancos de dados MongoDB e também ao \emph{middleware} de mensagens RabbitMQ. O RabbitMQ, por sua vez, distribui as tarefas que recebe entre os servidores de execução.
 
 Neste desenho de sistema, assume-se que os componentes de aplicação web, banco de dados e mensagens estejam fisicamente próximos, devido ao potencialmente alto tráfego de dados entre os respectivos nós. No entanto, a arquitetura também assume que os servidores de execução podem estar fisicamente distantes, talvez em outro \emph{data center} como aquele disponibilizado pelo serviço Amazon EC2.
 
@@ -521,7 +537,7 @@ A seguir, são apresentadas as descrições arquiteturais de cada um dos subsist
 
 No projeto da arquitetura, a aplicação web é um software implementado em Python sobre o framework web assíncrono Tornado, escrito de maneira a suportar tanto a técnica usual \emph{pull} quanto a técnica \emph{long polling} para atualização dos clientes. O software expõe aos clientes marcação HTML enriquecida com JavaScript para possibilitar os updates dinâmicos por long polling, e é compatível com os browsers modernos da atualidade, incluindo o \emph{Windows Internet Explorer,} o \emph{Mozilla Firefox,} o \emph{Google Chrome} e o \emph{Apple Safari.}
 
-A fim de permitir escalabilidade horizontal, a aplicação web é \emph{stateless,} ou seja, não mantém o estado do cliente no servidor web, fazendo com que não seja necessário que o cliente conecte-se sempre ao mesmo servidor web. Aplicações web \emph{stateless} permitem um melhor balanceamento de carga entre as máquinas do sistema.
+A fim de permitir escalabilidade horizontal, a aplicação web é \emph{stateless,} ou seja, não mantém o estado do cliente no servidor web, fazendo com que não seja necessário que o cliente conecte-se sempre ao mesmo servidor web. Aplicações web \emph{stateless} permitem um melhor balanceamento de carga entre as máquinas do sistema: o balanceador pode, desta maneira, adotar a estratégia simples de aleatorizar a distribuição de requisições.
 
 \subsubsection{Subsistema de banco de dados}
 
@@ -541,7 +557,7 @@ O software de execução de código também deve ser stateless, permitindo um f�
 
 O modelo de segurança, em particular aquele do subsistema de execução de código, se dá através de segurança em profundidade, partindo da camada mais profunda da aplicação. O sistema de execução faz uso do AppArmor, que implementa restrições às permissões das aplicações por \emph{whitelist} em nível de \emph{kernel,} sendo capaz de aplicar o filtro a todas as operações de \emph{system calls} disponíveis ao espaço de usuário. Pertencem à whitelist dos programas externos sendo executados apenas as permissões que são estritamente necessárias.
 
-Os limites sobre os recursos do sistema devem ser colocados da maneira mais restrita possível, sendo o único controle do AppArmor que requer diminuição explícita das permissões. Em particular, ataques como o chamado \emph{fork bomb,} no qual um processo tendo por única operação disparar mais processos é executado, esgotam rapidamente os recursos do sistema, impedindo qualquer tentativa de recuperação.
+Os limites sobre os recursos do sistema são colocados da maneira mais restrita possível, sendo o único controle do AppArmor que requer diminuição explícita das permissões. Em particular, forma considerados ataques como o chamado \emph{fork bomb,} no qual um processo tendo por única operação disparar mais processos é executado, esgotam rapidamente os recursos do sistema, impedindo qualquer tentativa de recuperação.
 
 Além disso, a implementação do sistema de execução deve ser feita da maneira mais enxuta possível, fazendo o mínimo uso de recursos e diminuindo ao máximo sua exposição externa. Desta forma, diminui-se a superfície de ataque, o que atua como mais uma barreira de segurança.
 
@@ -566,7 +582,7 @@ Neste protótipo, um sistema para competições mínimo foi implementado, suport
 
 Fazendo uso da arquitetura proposta e da técnica de long polling, o usuário recebe os resultados de sua avaliação assim que disponíveis. Após o envio de um código, uma linha referente à nova execução é dinamicamente acrescentada ao topo da tabela, contendo inicialmente um símbolo de carregamento \figref{facs-running}. Assim que a submissão é totalmente processada pelo sistema, a tabela visível ao usuário é automaticamente atualizada com o resultado da submissão.
 
-\fig{facs-running}{FACS: execução de uma submissão}
+\figcustom{facs-running}{FACS: execução de uma submissão}{tp}{1}
 
 O protótipo mostra que a capacidade de a página atualizar-se sem a intervenção do usuário é muito útil ao competidor, uma vez que o livra da necessidade de atualizar a página manualmente, como é comum nos outros sistemas para competições de programação. A mesma técnica pode, ainda ser usada para outras informações de atualização dinâmica como o ranking dos competidores ao longo de uma competição.
 
@@ -576,7 +592,7 @@ Funcionalidades como o ranking de competidores ou um sistema de questionamentos 
 
 Neste protótipo, foi implementado um simples ambiente integrado de desenvolvimento online, que possibilita ao usuário editar código C++ e, rapidamente, ter acesso ao resultado de sua execução.
 
-\figcustom{ide}{Tela principal do ambiente integrado de desenvolvimento online}{bp}{.9}
+\figcustom{ide}{Tela principal do ambiente integrado de desenvolvimento online}{tp}{.9}
 
 A interface é composta de uma única página \figref{ide}, na qual o usuário é capaz de digitar (ou colar) o código C++ que deseja ver executado. O usuário pode, então, clicar no botão ``Run,'' que enviará o código ao servidor e fará o cliente aguardar os resultados. Assim que os resultados são emitidos pelo sistema, o cliente é atualizado com a saída da execução (``... and check out the result!'').
 
@@ -676,5 +692,7 @@ O trabalho apresentado abre portas para um aprofundamento do estudo das possibil
 O trabalho também abre a possibilidade de estudos mais detalhados sobre o desenho e a arquitetura de sistemas dedicados tanto a competições de programação quanto a ambientes de desenvolvimento online. Enquanto apresentamos apenas uma arquitetura geral completa do sistema e um protótipo simplificado, trabalhos posteriores podem elaborar um sistema completo para um ou outro caso de uso, pormenorizando os problemas encontrados em cada passo.
 
 \bibliography{tg-cesarkawakami}
+
+\includepdf{registro}
 
 \end{document}
