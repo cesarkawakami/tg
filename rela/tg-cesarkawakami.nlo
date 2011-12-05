@@ -1,19 +1,19 @@
-\nomenclatureentry{aSESC@[{SESC}]\begingroup Sistema online para execução segura de código arbitrário\nomeqref {1.0}|nompageref}{12}
-\nomenclatureentry{aICPC@[{ICPC}]\begingroup International Collegiate Programming Contest\nomeqref {2.0}|nompageref}{14}
-\nomenclatureentry{aIOI@[{IOI}]\begingroup International Olympiad in Informatics\nomeqref {2.0}|nompageref}{14}
-\nomenclatureentry{aGCJ@[{GCJ}]\begingroup Google Code Jam\nomeqref {2.0}|nompageref}{14}
-\nomenclatureentry{aAIDO@[{AIDO}]\begingroup Ambiente Integrado de Desenvolvimento Online\nomeqref {2.0}|nompageref}{15}
-\nomenclatureentry{aDoS@[{DoS}]\begingroup Denial of Service\nomeqref {2.0}|nompageref}{19}
-\nomenclatureentry{aBOCA@[{BOCA}]\begingroup Boca Online Contest Administrator\nomeqref {2.0}|nompageref}{20}
-\nomenclatureentry{aE/S@[{E/S}]\begingroup Entrada e saída (de dados)\nomeqref {3.0}|nompageref}{21}
-\nomenclatureentry{aAMQP@[{AMQP}]\begingroup Advanced Message Queuing Protocol\nomeqref {3.0}|nompageref}{27}
-\nomenclatureentry{aPubSub@[{PubSub}]\begingroup Publicação e assinatura\nomeqref {3.0}|nompageref}{28}
-\nomenclatureentry{aRPC@[{RPC}]\begingroup Remote Procedure Call, ou chamada remota de procedimento\nomeqref {3.0}|nompageref}{29}
-\nomenclatureentry{aDAC@[{DAC}]\begingroup Discretionary access control, ou controle de acesso discricionário\nomeqref {3.0}|nompageref}{31}
-\nomenclatureentry{aMAC@[{MAC}]\begingroup Mandatory access control, ou controle de acesso obrigatório\nomeqref {3.0}|nompageref}{31}
-\nomenclatureentry{aPOSIX@[{POSIX}]\begingroup Portable Operating System Interface based on *niX, ou Interface portável de sistema operacional baseado em *nix\nomeqref {3.0}|nompageref}{33}
-\nomenclatureentry{aHTTP@[{HTTP}]\begingroup Hypertext transfer protocol, ou protocolo de transferência de hipertexto\nomeqref {3.0}|nompageref}{35}
-\nomenclatureentry{aURL@[{URL}]\begingroup Uniform resource locator, ou localizador uniforme de recursos\nomeqref {3.0}|nompageref}{35}
-\nomenclatureentry{aHTML@[{HTML}]\begingroup Hypertext markup language, ou linguagem de marcação para hipertexto\nomeqref {3.0}|nompageref}{35}
-\nomenclatureentry{aEC2@[{EC2}]\begingroup Elastic computing cloud, ou nuvem elástica de computação\nomeqref {4.0}|nompageref}{39}
-\nomenclatureentry{aGCC@[{GCC}]\begingroup Gnu Compiler Collection, ou coleção de compiladores da GNU\nomeqref {4.0}|nompageref}{48}
+\nomenclatureentry{aSESC@[{SESC}]\begingroup Sistema online para execução segura de código arbitrário\nomeqref {1.0}|nompageref}{15}
+\nomenclatureentry{aICPC@[{ICPC}]\begingroup International Collegiate Programming Contest\nomeqref {2.0}|nompageref}{17}
+\nomenclatureentry{aIOI@[{IOI}]\begingroup International Olympiad in Informatics\nomeqref {2.0}|nompageref}{17}
+\nomenclatureentry{aGCJ@[{GCJ}]\begingroup Google Code Jam\nomeqref {2.0}|nompageref}{17}
+\nomenclatureentry{aAIDO@[{AIDO}]\begingroup Ambiente Integrado de Desenvolvimento Online\nomeqref {2.0}|nompageref}{19}
+\nomenclatureentry{aDoS@[{DoS}]\begingroup Denial of Service\nomeqref {2.0}|nompageref}{22}
+\nomenclatureentry{aBOCA@[{BOCA}]\begingroup Boca Online Contest Administrator\nomeqref {2.0}|nompageref}{23}
+\nomenclatureentry{aE/S@[{E/S}]\begingroup Entrada e saída (de dados)\nomeqref {3.0}|nompageref}{25}
+\nomenclatureentry{aAMQP@[{AMQP}]\begingroup Advanced Message Queuing Protocol\nomeqref {3.0}|nompageref}{31}
+\nomenclatureentry{aPubSub@[{PubSub}]\begingroup Publicação e assinatura\nomeqref {3.0}|nompageref}{33}
+\nomenclatureentry{aRPC@[{RPC}]\begingroup Remote Procedure Call, ou chamada remota de procedimento\nomeqref {3.0}|nompageref}{34}
+\nomenclatureentry{aDAC@[{DAC}]\begingroup Discretionary access control, ou controle de acesso discricionário\nomeqref {3.0}|nompageref}{36}
+\nomenclatureentry{aMAC@[{MAC}]\begingroup Mandatory access control, ou controle de acesso obrigatório\nomeqref {3.0}|nompageref}{38}
+\nomenclatureentry{aPOSIX@[{POSIX}]\begingroup Portable Operating System Interface based on *niX, ou Interface portável de sistema operacional baseado em *nix\nomeqref {3.0}|nompageref}{39}
+\nomenclatureentry{aHTTP@[{HTTP}]\begingroup Hypertext transfer protocol, ou protocolo de transferência de hipertexto\nomeqref {3.0}|nompageref}{40}
+\nomenclatureentry{aURL@[{URL}]\begingroup Uniform resource locator, ou localizador uniforme de recursos\nomeqref {3.0}|nompageref}{40}
+\nomenclatureentry{aHTML@[{HTML}]\begingroup Hypertext markup language, ou linguagem de marcação para hipertexto\nomeqref {3.0}|nompageref}{40}
+\nomenclatureentry{aEC2@[{EC2}]\begingroup Elastic computing cloud, ou nuvem elástica de computação\nomeqref {4.0}|nompageref}{45}
+\nomenclatureentry{aGCC@[{GCC}]\begingroup Gnu Compiler Collection, ou coleção de compiladores da GNU\nomeqref {4.0}|nompageref}{55}

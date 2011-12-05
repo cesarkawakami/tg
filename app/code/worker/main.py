@@ -248,9 +248,10 @@ class IdeHandler(object):
                 stdin=None,
                 stdout=output_file,
                 stderr=error_file,
-                preexec_fn=self.prepare_process(cpu=1),
+                preexec_fn=self.prepare_process(cpu=30),
                 close_fds=True,
-                env={}
+                env={},
+                cwd=BOX_DIR
             )
             execution_result = p.wait()
             # killing process group

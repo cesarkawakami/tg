@@ -15,7 +15,8 @@
 \usepackage{nomencl}\makenomenclature
 \usepackage{afterpage}
 \usepackage{pdfpages}
-
+\usepackage{listings}
+\usepackage{bookmark}
 
 %%%
 %%% TITLE
@@ -69,6 +70,32 @@
 % making the TOC smaller
 \setcounter{tocdepth}{2}
 
+% Listings
+\renewcommand\lstlistingname{Listagem}
+\renewcommand\lstlistlistingname{Lista de Listagens}
+\lstset{%
+	numberbychapter=false,
+	frame=single,
+	language=C++
+}
+\makeatletter
+%\lst@UserCommand\lstlistoflistings{\bgroup
+%    \let\contentsname\lstlistlistingname
+%    \let\lst@temp\@starttoc \def\@starttoc##1{\lst@temp{lol}}%
+%    \tableofcontents \addcontentsline{toc}{chapter}{Lista de Listagens}  \egroup}
+\renewcommand{\lstlistoflistings}{%
+  \ifthenelse{\boolean{@twocolumn}}%
+    {\setboolean{ABNTrestorecol}{true}\onecolumn}%
+    {\setboolean{ABNTrestorecol}{false}}%
+  \ifthenelse{\boolean{ABNThypertoc}}{\renewcommand{\chaptertype}{listoflistings.}}{}
+  \pretextualchapter{\lstlistlistingname}
+  \ifthenelse{\boolean{ABNThypertoc}}{\renewcommand{\chaptertype}{}}{}
+  \@starttoc{lol}%
+  \ifthenelse{\boolean{ABNTrestorecol}}{\twocolumn}{}%
+}%
+\makeatother
+
+% Fixing bookmarks
 
 %%%
 %%% BEGIN DOCUMENT
@@ -110,19 +137,50 @@
 %	\end{center}
 %\end{folhadeaprovacao}
 
+\chapter*{}
+
+\vfill
+
+\begin{flushright}
+A todos os meus amigos,\\
+porque sobreviver ao ITA, acadêmica e pessoalmente, seria impossível sem vocês.
+\end{flushright}
+
+\vfill
+
+\chapter*{Agradecimentos}
+
+Os méritos deste trabalho merecem ser divididos com algumas pessoas.
+
+Agradeço aos meus colegas de equipe na ACM ICPC, Guilherme Souza e Daniel Moreira, pela formação de uma equipe fantástica que possibilitou o conhecimento sobre competições de programação que serviu como uma das bases deste projeto.
+
+Agradeço, também, ao Prof. Armando Gouveia, pessoa responsável pelas atividades do ITA na ICPC e também orientador deste trabalho. Sem seu esforço, a presença do ITA nas competições de programação talvez fosse muito menor e este trabalho talvez não fosse possível.
+
 \begin{resumo}
 Um sistema online para execução segura de código arbitrário é um sistema computacional voltado para a Internet que permita a execução segura de código proveniente de fontes não-confiáveis. A execução segura de código arbitrário é um tema pouco abordado na área de sistemas operacionais, uma vez que, em geral, assume-se que o usuário será o responsável pelos processos disparados. Os objetivos imediatos deste trabalho são fazer uma exposição dos casos de uso considerados para então elaborar uma arquitetura detalhada de um sistema que resolve o problema e montar um protótipo funcional. São estudadas duas aplicações: competições de programação, que avaliam os competidores executando seus códigos contra uma bateria secreta de testes, e as IDEs online, que permitem a execução de código sem necessitar da instalação de ambientes locais de desenvolvimento. Um levantamento é feito sobre os poucos sistemas já existentes que abordam os mesmos problemas. São descritas as principais tecnologias utilizadas e respectivas fundamentações teóricas durante o trabalho, incluindo Tornado, MongoDB, RabbitMQ, AppArmor e long polling. É apresentado o projeto de um sistema online para execução segura de código arbitrário. São descritas as considerações de design feitas, bem como as estratégias arquiteturais escolhidas, que incluem o uso de programação de alto nível, o uso de escalabilidade horizontal como meio para obtenção de performance e a segurança em profundidade. É apresentada a arquitetura do sistema, com uma exposição sobre a sua visão geral, bem como a arquitetura dos subsistemas, o modelo de segurança e os protocolos de comunicação. Finalmente, um protótipo funcional para cada um dos casos de uso estudados é mostrado, seguido de uma breve análise de validação. O protótipo apresentou-se performante, com escalabilidade horizontal linear e resistente aos ataques testados. No futuro, pode ser feito um aprofundamento sobre as possibilidades criadas por sistemas seguros para execução de código arbitrário, bem como sobre a problemática envolvida na elaboração de sistemas mais completos para o problema estudado.
 \end{resumo}
 
 \begin{abstract}
-An online system for safe arbitrary code execution is a computational system for the Internet which allows the safe execution of code from unreliable sources. Works about safe execution of arbitrary code are rare in the literature since operating systems, in general, make the assumption that the user is well aware and trusts the processes running on the system. The immediate objectives of this work are to make an exposition of the use cases that are the focus of this work, then present a detailed architecture that solves the proposed problem and build a functional prototype. Two main use cases are studied: programming competitions, which evaluate contestants by running their codes against a secret battery of test cases, and online IDEs, which allow running code without the user having to install any kind of local development environment. A brief survey is done regarding the few existing systems that solve the same kinds of problems. The main technologies that are used in this work are described together with some theoretical background, including Tornado, MongoDB, RabbitMQ, AppArmor and long polling. We then present a general framework for a online system for safe arbitrary code execution. The main design considerations are described, as well as the chosen architectural strategies which include the use of high-level programming, horizontal scalability as the path to greater performance and security in depth. The architecture of the proposed system is presented, including an overview, the architecture of each of the subsystems, the security model and the communication protocols. Finally, a functional prototype for each of the studied use cases is shown, followed by a brief validation analysis. The prototype performs well, showing linear horizontal scalability and resistance against a known list of attacks. In the future, more studies can be done regarding the possibilities created by safe online environments for executing arbitrary code, as well as the problems involved in designing more complete systems for the studied use cases.
+An online system for safe arbitrary code execution is a computational system for the Internet which allows for safe execution of code from unreliable sources. Works about safe execution of arbitrary code are rare in the literature since operating systems, in general, make the assumption that the user is well aware and trusts the processes running on the system. The immediate objectives of this work are to make an exposition of the use cases that are the focus of this work, then present a detailed architecture that solves the proposed problem, and build a functional prototype. Two main use cases are studied: programming competitions, which evaluate contestants by running their codes against a battery of secret test cases, and online IDEs, which allow running code without the user having to install any kind of local development environment. A brief survey is done regarding the few existing systems that solve the same kinds of problems. The main technologies that are used in this work are described together with some theoretical background, including Tornado, MongoDB, RabbitMQ, AppArmor and long polling. We then present a general framework for an online system for safe arbitrary code execution. The main design considerations are described, as well as the chosen architectural strategies which include the use of high-level programming, horizontal scalability as the path to greater performance and security in depth. The architecture of the proposed system is presented, including an overview, the architecture of each of the subsystems, the security model and the communication protocols. Finally, a functional prototype for each of the studied use cases is shown, followed by a brief validation analysis. The prototype performs well, showing linear horizontal scalability and resistance against a known list of attacks. In the future, more studies can be done regarding the possibilities created by safe online environments for executing arbitrary code, as well as the problems involved in designing more complete systems for the studied use cases.
 \end{abstract}
+
+\bookmark[level=0, page=1]{Capa}
+\bookmark[level=0, page=2]{Folha de rosto}
+\bookmark[level=0, page=3]{Verso da folha de rosto}
+\bookmark[level=0, page=4]{Folha de aprovação}
+\bookmark[level=0, page=5]{Dedicatória}
+\bookmark[level=0, page=6]{Agradecimentos}
+\bookmark[level=0, page=7]{Resumo}
+\bookmark[level=0, page=8]{Abstract}
+\bookmark[level=0, page=9]{Sumário}
 
 \tableofcontents
 
 \listoffigures
 
 \listoftables
+
+\lstlistoflistings
 
 \renewcommand\nomname{Lista de Abreviaturas e Siglas}
 \printnomenclature
@@ -135,13 +193,13 @@ Neste capítulo inicial, são feitas considerações iniciais sobre a natureza d
 
 \nomenclature{SESC}{Sistema online para execução segura de código arbitrário}
 
-Um \emph{sistema online para execução segura de código arbitrário} (SESC) é um sistema computacional voltado para a Internet e que permita a execução segura de código proveniente de fontes não-confiáveis. Em geral, são sistemas que provém o uso desse serviço diretamente ao usuário final, permitindo que este execute aplicações ou trechos de código e obtenha os resultados desta execução, mas delegue a responsabilidade da execução do código em si aos servidores de aplicação.
+Um \emph{sistema online para execução segura de código arbitrário} (SESC) é um sistema computacional voltado para a Internet e que permita a execução segura de código proveniente de fontes não-confiáveis. Em geral, são sistemas que provêm o uso desse serviço diretamente ao usuário final, permitindo que este execute aplicações ou trechos de código e obtenha os resultados desta execução, mas delegue a responsabilidade da execução do código em si aos servidores de aplicação.
 
 SESCs são sistemas interessantes e necessários a uma gama de aplicações. Entre as principais aplicações de sistemas desse tipo, encontram-se as competições de programação, como a International Olympiad in Informatics e a International Collegiate Programming Contest; e os ambientes integrados de desenvolvimento online, como o disponível no site \verb|http://www.ideone.com|. Em seções posteriores, examinaremos mais a fundo cada um desses casos de uso.
 
 \section{Objetivos}
 
-Este trabalho tem, por fim, analisar de maneira extensiva a problemática envolvida com o \emph{design} e a implementação de SESCs, bem como apresentar uma proposta de sistema que exibe as características desejadas e uma implementação prototípica das funcionalidades mais críticas.
+Este trabalho tem, por fim, analisar de maneira extensiva a problemática envolvida com o \emph{design} e a implementação de SESCs, bem como apresentar uma proposta de sistema que exibe as características desejadas e uma implementação prototípica das funcionalidades mais críticas aliada à sua validação.
 
 \section{Estrutura do trabalho}
 
@@ -171,7 +229,7 @@ Restrições, dados e entradas dos problemas são desenhados de maneira a possib
 
 Embora cada competição empregue condições diferentes de aceitação e graduação das soluções enviadas, são dois os principais critérios utilizados. Os programas são avaliados pela sua \emph{correção} através da comparação dos resultados emitidos contra um catálogo de entradas e saídas esperadas elaborado pela comissão julgadora. Os programas são também avaliados pela sua \emph{eficiência} através do seu tempo de execução total em relação à bateria de testes executada, para a qual existe um tempo-referência máximo. Tais tempos-referência baseiam-se nas melhores soluções conhecidas para o problema em questão implementadas pela banca, e a configuração do problema é ajustada para se ter tempos máximos no entorno entre alguns segundos e alguns minutos.
 
-Em competições de estilo ICPC, os resultados das análise das soluções submetidas são fornecidos assim que disponíveis durante a competição, usualmente após alguns minutos. Tal realimentação permite à equipe mal sucedida modificar sua solução para tentar corrigir o problema. A fim de manter o desafio, porém, apenas um conjunto enxuto de sinais é enviado aos competidores, geralmente composto de 4 sinais, nomeadamente:
+Em competições de estilo ICPC, os resultados das análise das soluções submetidas são fornecidos assim que disponíveis durante a competição, usualmente após poucos minutos. Tal realimentação permite à equipe mal sucedida modificar sua solução para tentar corrigir o problema. A fim de manter o desafio, porém, apenas um conjunto enxuto de sinais é enviado aos competidores, geralmente composto de 4 sinais, nomeadamente:
 \begin{itemize}
 	\item \emph{Accepted,} para soluções aceitas como corretas pelo sistema.
 	\item \emph{Wrong answer,} para soluções tidas como incorretas pelo sistema através da análise da saída do programa.
@@ -181,6 +239,7 @@ Em competições de estilo ICPC, os resultados das análise das soluções subme
 
 Devido à elevada relação número de problemas--tempo disponível, ficando em menos de 30 minutos por problema em competições como a ICPC, são provas em que o tempo é considerado recurso escasso e de controle essencial para uma boa eficiência.
 
+\clearpage
 \section{Ambientes integrados de desenvolvimento online}
 
 \nomenclature{AIDO}{Ambiente Integrado de Desenvolvimento Online}
@@ -206,9 +265,9 @@ As competições de programação e os ambientes integrados de desenvolvimento o
 
 No contexto das competições de programação, devem ser considerados cenários de provas \emph{on-site}\footnote{Situações em que todos os competidores competem em um mesmo local designado.} com mais de 500 clientes como durante a IOI \cite{ioi-nl1-2007} e provas \emph{off-site}\footnote{Situações em que a prova é praticada inteiramente através da internet, assim atingindo escala mundial facilmente.} com mais de 30.000 clientes simultaneamente como durante a GCJ \cite{googlecodejamhistory}. Ao mesmo tempo, AIDOs são, em geral, sistemas voltados para o uso da comunidade em geral, podendo requerer uma quantidade bastante significativa de recursos. Considerando o padrão de uso pesado dos sistemas envolvidos, particularmente devido ao requerimento de executar por um intervalo de tempo não-trivial pedaços de código arbitrário enviados pelos usuários, surge a necessidade de boa \emph{escalabilidade} do sistema, em especial no sistema de execução de código arbitrário.
 
-A \emph{escalabilidade} de um sistema, sob o ponto de vista da computação, é a sua abilidade de lidar com o crescimento de sua demanda. Sistemas escaláveis apresentam arquiteturas que podem ser expandidas conforme a demanda cresce, e cujo custo dessa expansão não se torna proibitivo quando comparados aos respectivos ganhos em demanda.
+A \emph{escalabilidade} de um sistema, sob o ponto de vista da computação, é a sua habilidade de lidar com o crescimento de sua demanda. Sistemas escaláveis apresentam arquiteturas que podem ser expandidas conforme a demanda cresce, e cujo custo dessa expansão não se torna proibitivo quando comparados aos respectivos ganhos em demanda.
 
-Sistemas online para execução de código arbitrário, devido aos altos requisitos que apresentam em termos de poder computacional, devem então levar em conta a devida escalabilidade de suas arquiteturas. Eventuais crescimentos de demanda, tanto em competições de programação quanto em AIDOs, são totalmente plausíveis, e qualquer SESC devidamente planejado deve adminsistrar tal crescimento em demanda de maneira de maneira elegante.
+Sistemas online para execução de código arbitrário, devido aos altos requisitos que apresentam em termos de poder computacional, devem então levar em conta a devida escalabilidade de suas arquiteturas. Eventuais crescimentos de demanda, tanto em competições de programação quanto em AIDOs, são totalmente plausíveis, e qualquer SESC devidamente planejado deve administrar tal crescimento em demanda de maneira de maneira elegante.
 
 \subsection{Resposta rápida e comunicação bidirecional}
 
@@ -226,7 +285,7 @@ Qualquer sistema operacional exposto a uma quantidade não-trivial de usuários 
 
 No contexto da segurança da informação, é utilizado como base o triângulo composto por confidencialidade, integridade e disponibilidade \cite{stamp2011}. A \emph{confidencialidade} se trata do princípio pelo qual o acesso a informações deve ser negado ou impedido de alguma forma às partes que não foram autorizadas para tal. A \emph{integridade} trata da prevenção~--- ou, em último caso, detecção~--- de alterações ou deleções dos dados existentes por partes não autorizadas. Finalmente, com a crescente preocupação com ataques de negação de serviço através da internet, a \emph{disponibilidade} dos sistemas passou a ser preocupação fundamental no desenho de sistemas focado em segurança da informação.
 
-Devido à característica pecular de execução de código arbitrário, os sistemas em questão são particularmente suscetíveis a uma ampla gama de ataques \cite{tochev2010,forisek2006security}. As seguintes categorias de ataques destacam-se como de particular relevância.
+Devido à característica peculiar de execução de código arbitrário, os sistemas em questão são particularmente suscetíveis a uma ampla gama de ataques \cite{tochev2010,forisek2006security}. As seguintes categorias de ataques destacam-se como de particular relevância.
 \begin{itemize}
 	\nomenclature{DoS}{Denial of Service}
 	\item Ataques de \emph{negação de serviço} (DoS, do inglês \emph{denial of service}) visam afetar a disponibilidade do sistema alvo, e são preocupação inerente a qualquer sistema informatizado, em particular aqueles com envolvimento da web. AIDOs, que apresentam em sua natureza a exposição à comunidade em geral, são particularmente suscetíveis a este tipo de ataque.
@@ -264,7 +323,9 @@ Neste capítulo, faremos uma exposição das ferramentas e das tecnologias abord
 	\item O \emph{RabbitMQ,} um \emph{middleware} orientado a mensagens para computação distribuída;
 	\item O \emph{AppArmor,} um sistema de controle de acesso obrigatório para \emph{kernels} Linux;
 	\item O \emph{long polling,} uma técnica que permite o desenvolvimento de aplicações com comunicação \emph{push} num meio tradicionalmente \emph{pull} como a \emph{web.}
-\end{itemize}	
+\end{itemize}
+
+Muitas das tecnologias apresentadas são bastante modernas e não dispõem de boa documentação sobre seu funcionamento interno. Neste trabalho, quando possível, fez-se esforço pela elaboração de textos e diagramas que expliquem na medida do razoável os tópicos de maior importância referentes a cada ferramenta.
 	
 \section{Tornado}
 
@@ -304,7 +365,7 @@ No paradigma relacional, um banco de dados se constitui por uma coleção de rel
 
 A título de exemplo, para o armazenamento do inventário de uma loja de artigos esportivos, poderíamos ter a relação \emph{modelo,} que referenciaria a relação \emph{marca} (uma marca pode ter vários modelos, mas um modelo tem apenas uma marca), e teríamos também a relação \emph{item} (um modelo pode ter vários itens, de diferentes cores, por exemplo, mas cada item é de apenas um modelo). Neste modelo, a recuperação de dados completos de um modelo, por exemplo, separados em várias relações, se faz através do uso dos chamados \emph{joins,} operações que associam relações, ``montam'' e retornam ao cliente uma estrutura completa.
 
-O problema surge quando se deseja escalar horizontalmente os bancos de dados relacionais a um número significativo de servidores. Devido ao desconhecimento dos padrões de uso da aplicações por parte do modelo, a escalabilidade horizontal dos bancos de dados relacionais se dá através do \emph{estilhaçamento} dos dados de cada relação, no qual, de acordo com um critério de aleatoriedade ou que garanta a igualdade, os dados de uma relação são distribuídos entre os diversos servidores de bancos de dados. Por exemplo, enquanto os dados do modelo X podem estar no servidor A, os dados dos itens Y e Z (ambos do modelo X) podem estar nos servidores B e C, todos distintos. Isso torna as operações de \emph{join} significativamente mais complexas, envolvendo diversos servidores com uma troca aparentemente desordenada e muito custosa de informações.
+O problema surge quando se deseja escalar horizontalmente os bancos de dados relacionais a um número significativo de servidores. Devido ao desconhecimento dos padrões de uso das aplicações por parte do modelo, a escalabilidade horizontal dos bancos de dados relacionais se dá através do \emph{estilhaçamento} dos dados de cada relação, no qual, de acordo com um critério de aleatoriedade ou que garanta a igualdade, os dados de uma relação são distribuídos entre os diversos servidores de bancos de dados. Por exemplo, enquanto os dados do modelo X podem estar no servidor A, os dados dos itens Y e Z (ambos do modelo X) podem estar nos servidores B e C, todos distintos. Isso torna as operações de \emph{join} significativamente mais complexas, envolvendo diversos servidores com uma troca aparentemente desordenada e muito custosa de informações.
 
 Um percalço ainda maior surge quando são consideradas alterações aos bancos de dados. Devido à natureza espalhada que os dados adquirem quando normalizados (que os colocam em diversas relações) e estilhaçados (que colocam os elementos de cada relação em diversos servidores), as alterações, a fim de preservar a consistência dos dados, são usualmente encapsuladas em \emph{transações}~--- conjuntos de operações que, em grupo, preservam as características de \emph{atomicidade,} \emph{consistência,} \emph{isolamento} e \emph{durabilidade} que são as características essenciais de qualquer banco de dados. A questão é que transações em sistemas distribuídos são obrigadas a sincronizar (travar) recursos em todas as máquinas afetadas, diminuindo drasticamente a performance do sistema: um conjunto de máquinas atuando em sincronia age, efetivamente, na velocidade de uma única máquina.
 
@@ -338,11 +399,13 @@ No padrão de \emph{distribuição de tarefas} \figref{rabbitmq-workqueue}, tamb
 
 \figcustom{rabbitmq-workqueue}{Padrão de troca de mensagens por distribuição de tarefas}{tp}{1}
 
+\figcustom{rabbitmq-worker}{Estados simplificados de um consumidor no protocolo AMQP}{tp}{0.6}
+
+\afterpage{\clearpage}
+
 O protocolo é construído de maneira a ser altamente resiliente a falhas: cada trabalhador é obrigado a enviar um \emph{acknowledgement} \figref{rabbitmq-worker} para o RabbitMQ, indicando a conclusão da tarefa. Apenas assim a tarefa é removida da memória do servidor de fila. Caso o consumidor sofra uma queda enquanto processa a tarefa, nenhum dado é perdido: o servidor de fila detecta a queda pela falha de conexão, e imediatamente repassa a tarefa a outro consumidor.
 
 Tal protocolo também permite o chamado \emph{enfileiramento justo,} no qual cada consumidor apenas recebe uma nova mensagem quando termina de processar a anterior~--- ou seja, apenas quando o servidor de fila recebe o \emph{acknowledgement} da tarefa corrente. Essa prática uniformiza a carga entre os consumidores no caso de tarefas com tempos de execução muito heterogêneos.
-
-\figcustom{rabbitmq-worker}{Estados simplificados de um consumidor no protocolo AMPQ}{tp}{0.6}
 
 \subsection{Troca de mensagens por publicação e assinatura}
 
@@ -350,9 +413,9 @@ Tal protocolo também permite o chamado \emph{enfileiramento justo,} no qual cad
 
 No padrão de \emph{publicação e assinatura} (PubSub) \figref{rabbitmq-pubsub}, o produtor \emph{publica} mensagens em uma determinada categoria. Os consumidores que se interessarem, por sua vez, \emph{assinam} essa categoria, passando, assim, a receber as mensagens referentes à mesma. No AMQP, tal padrão pode ser implementado com o auxílio dos chamados \emph{exchanges,}  que são estruturas que agem como roteadores de mensagens.
 
-No caso específico do PubSub, os \emph{exchanges} são configurados para despachar as mensagens para todas as filas inscritas à ele. Para efetuar a assinatura, o consumidor, então, cria uma fila temporária para si~--- que apenas será válida enquanto estiver conectado~--- e a anexa (ou inscreve) ao \emph{exchange} desejado, passando, então, a receber as mensagens que deseja. Observe que tanto as filas como os \emph{exchanges} são totalmente administrados pelo servidor RabbitMQ.
+\figcustom{rabbitmq-pubsub}{Padrão de troca de mensagens por publicação e assinatura}{bp}{1}
 
-\figcustom{rabbitmq-pubsub}{Padrão de troca de mensagens por publicação e assinatura}{tp}{1}
+No caso específico do PubSub, os \emph{exchanges} são configurados para despachar as mensagens para todas as filas inscritas à ele. Para efetuar a assinatura, o consumidor, então, cria uma fila temporária para si~--- que apenas será válida enquanto estiver conectado~--- e a anexa (ou inscreve) ao \emph{exchange} desejado, passando, então, a receber as mensagens que deseja. Observe que tanto as filas como os \emph{exchanges} são totalmente administrados pelo servidor RabbitMQ.
 
 \subsection{Troca de mensagens por chamada remota de procedimento}
 
@@ -360,14 +423,15 @@ No caso específico do PubSub, os \emph{exchanges} são configurados para despac
 
 Finalmente, no padrão de \emph{chamada remota de procedimento} (RPC) \figref{rabbitmq-rpc}, a intenção é a de executar uma operação em algum consumidor e receber de volta o respectivo resultado. Este padrão é uma extensão do padrão de distribuição de tarefas em que os resultados voltam ao endereço de origem da tarefa.
 
-No AMQP, esse padrão é implementado através de uma ligeira mistura entre os padrões de distribuição de tarefas e PubSub: quando o cliente se conecta, a fim de fazer uma RPC, cria no servidor RabbitMQ uma fila temporária para si com um determinado nome, com o intuito de receber as respostas vindas dos servidores. Ao enviar uma requisição de RPC, anota junto à mesma seu ``endereço de retorno:'' o nome da fila criada para receber as respostas. As requisições são distribuídas entre os servidores pelo RabbitMQ que, por sua vez, processam as requisições e enfileiram as mensagens contendo as respostas nas filas ``de retorno'' informadas nas mensagens vindas dos clientes.
-
 \figcustom{rabbitmq-rpc}{Padrão de troca de mensagens por chamada remota de procedimento (RPC)}{p}{1}
 
-\afterpage{\clearpage}
+No AMQP, esse padrão é implementado através de uma ligeira mistura entre os padrões de distribuição de tarefas e PubSub: quando o cliente se conecta, a fim de fazer uma RPC, cria no servidor RabbitMQ uma fila temporária para si com um determinado nome, com o intuito de receber as respostas vindas dos servidores. Ao enviar uma requisição de RPC, anota junto à mesma seu ``endereço de retorno:'' o nome da fila criada para receber as respostas. As requisições são distribuídas entre os servidores pelo RabbitMQ que, por sua vez, processam as requisições e enfileiram as mensagens contendo as respostas nas filas ``de retorno'' informadas nas mensagens vindas dos clientes.
+
+
 
 Note-se que o protocolo sugerido é bastante enxuto e leve, facilitando o desenho e a arquitetura de aplicações distribuídas. Protocolos como o AMQP e softwares como o RabbitMQ são peças básicas sobre as quais pode-se construir, organizadamente, aplicações distribuídas que escalem de maneira elegante sobre uma boa arquitetura, promovida pela escolha de protocolos de comunicação limpos e leves. O RabbitMQ foi o software e a arquitetura de escolha na implementação do projeto deste trabalho.
 
+\clearpage
 \section{AppArmor}
 
 O \emph{AppArmor} (de ``Application Armor'', ou ``armadura para aplicações'') é um \emph{módulo de segurança} para o \emph{kernel} Linux que permite ao administrador do sistema associar, a cada programa, um chamado \emph{perfil de segurança} que restringe as capacidades daquele programa. O AppArmor suplementa o tradicional \emph{controle de acesso discricionário} dos sistemas Unix, no qual as aplicações e usuários têm a liberdade de ceder suas permissões a aplicações derivadas, com a implementação de um \emph{sistema de segurança obrigatório} que, essencialmente, impõe restrições maiores sobre as possibilidades do acesso discricionário.
@@ -384,13 +448,14 @@ Sendo assim, fixados os parâmetros de usuário e grupo, um processo possui a me
 
 O DAC, então, \emph{assume} que o usuário tem pleno domínio das ações e aplicativos que dispara no sistema, e que os processos sendo executados são, todos, minimamente confiáveis. A falta de controle permite uma ampla gama de ataques caso código arbitrário possa ser executado: a título de exemplo, independentemente do usuário sob o qual o processo roda, é muito comum o acesso universal permitido a diretórios como o \verb|/var/tmp| em ambientes Unix. Nesse caso, o DAC permite o acesso total a qualquer processo, e um ataque de preenchimento do disco rígido torna-se praticamente trivial.
 
+\clearpage
 \subsection{Controle de acesso obrigatório}
 
 \nomenclature{MAC}{Mandatory access control, ou controle de acesso obrigatório}
 
 No \emph{controle de acesso obrigatório} (MAC, de \emph{mandatory access control}), cada processo é submetido a um controle \emph{individual} das capacidades que possui, \emph{independentemente} do usuário/grupo a que está subordinado. Sistemas MAC são usualmente implementados como uma \emph{suplementação} ao DAC. Durante a execução de uma \emph{system call,} sistemas MAC incorporam na rotina de checagem de permissões as especificações específicas ao processo sob análise \figref{syscalls-mac}.
 
-\figcustom{syscalls-mac}{Sistema de segurança por \emph{controle de acesso obrigatório.}}{tp}{.8}
+\figcustom{syscalls-mac}{Sistema de segurança por \emph{controle de acesso obrigatório.}}{bp}{.8}
 
 A obrigatoriedade do controle de acesso vem da independência do sistema de usuários e grupos. Se um determinado processo encontra-se configurado de acordo com um certo conjunto de capacidades no sistema, esse processo reterá tal conjunto de capacidades~--- ou um subconjunto desses, se outros perfis para o mesmo processo estiverem ativos, mas nunca um superconjunto~--- independentemente do usuário/grupo sob o qual é executado. Se um processo \verb|A| está submetido ao conjunto de capacidades \verb|B|, ele estará submetido a esse mesmo conjunto de capacidades mesmo que rode sob a conta do superusuário \emph{root.}
 
@@ -429,12 +494,13 @@ O \emph{long polling sobre HTTP} é uma técnica que possibilita o desenvolvimen
 
 No modelo tradicional da \emph{World Wide Web} \figref{webmodel-pull}, o usuário inicia a sua navegação digitando em seu \emph{browser} a URL da página que deseja acessar. O browser, por sua vez, abre uma conexão através do protocolo HTTP com o servidor em que a página se encontra hospedada. O servidor então responde com o conteúdo da página desejada, e a conexão é fechada. De modo geral, as páginas são codificadas segundo a linguagem de marcação HTML, que permite a inclusão de \emph{ligações} e \emph{formulários} que levam o usuário a ainda outras páginas e URLs, permitindo a interação do usuário com o conteúdo.
 
-\figcustom{webmodel-pull}{Requisições \emph{World Wide Web} ao longo do tempo}{bp}{.8}
+\figcustom{webmodel-pull}{Requisições \emph{World Wide Web} ao longo do tempo}{tp}{.8}
 
 Mais recentemente, com a solidificação da linguagem \emph{JavaScript} como padrão na web e a subsequente implementação pela quase totalidade dos browsers modernos, surge o conceito de atualização dinâmica de páginas, no qual a ação de um usuário na página não necessariamente leva o usuário a outra URL, mas pode levar a atualizações na própria página em que o usuário atualmente se encontra. Programas em \emph{JavaScript} embutidos nas páginas permitem que se transformem em verdadeiros clientes ricos em funcionalidade.
 
 Ainda assim, a comunicação depende sempre da iniciativa do usuário ou do navegador, impedindo que as atualizações ocorram por conta de eventos do lado do servidor. Este modelo de comunicação é conhecido como \emph{tecnologia pull.} Um meio-termo é atingido através da técnica de \emph{polling,} na qual o cliente, periodicamente, faz requisições ao servidor a fim de saber se existe algum novo dado a ser recebido pelo cliente. Esta técnica, porém, implica em uma grande carga sobre o servidor e sobre a rede para funcionar corretamente: um período muito grande entre requisições abre a possibilidade de defasamento das informações do cliente, enquanto um período muito pequeno sobrecarrega todos os sistemas envolvidos.
 
+\clearpage
 \subsection{A tecnologia \emph{push} e sua implementação por \emph{long polling}}
 
 A tecnologia \emph{push} trata-se de um estilo de comunicação baseada em Internet na qual a requisição para uma dada troca de dados é iniciada pelo \emph{servidor,} e não pelo cliente. Nesse modelo, eventos que ocorrem do lado do servidor podem ser imediatamente causar atualizações nos clientes, sem a necessidade de uma requisição explícita. Situações em que o cliente deve esperar receber atualizações, como \emph{email} ou mensagens instantâneas, encaixam-se frequentemente no paradigma \emph{push.}
@@ -491,9 +557,9 @@ Com base nos objetivos do sistema e em suas considerações de design, é possí
 
 Na medida do possível, o sistema deve ser programado em uma linguagem de programação de alto nível. Linguagens de programação de alto nível são aquelas linguagens que apresentam uma forte abstração dos detalhes do computador. Duas fortes características da programação em alto nível desejáveis para este projeto são as seguintes:
 \begin{itemize}
-	\item \emph{Produtividade e facilidade de uso}. Nas linguagens de programação de alto nível, o programador delega o controle sobre detalhes específicos sobre a máquina ou o sistema operacional à linguagem de programação em si. Além disso, tais linguagens costumam fornecer um número significativo de módulos comuns a vários sistemas previa e robustamente programados, além de elementos de sintaxe mais expressivos, que permitem ao programador realizar conceitos em menos linhas de código.
+	\item \emph{Produtividade e facilidade de uso}. Nas linguagens de programação de alto nível, o programador delega o controle sobre detalhes específicos sobre a máquina ou o sistema operacional à linguagem de programação em si. Além disso, tais linguagens costumam fornecer um número significativo de módulos comuns a vários sistemas prévia e robustamente programados, além de elementos de sintaxe mais expressivos, que permitem ao programador realizar conceitos em menos linhas de código.
 	
-	\item \emph{Segurança.} Devido à abstração de detalhes de implementação como o gerenciamento de memória, as linguagens de programação de alto nível liberam o programador de escrever muitos trechos de código críticos à segurança do sistema. Tal filosofia diminui a chance de erros de programação levarem a falhas cadastróficas. Através da escolha de uma linguagem de programação popular e, consequentemente, devidamente testada, mitiga-se também a chance da própria linguagem apresentar falhas que podem ser exploradas por atacantes maliciosos.
+	\item \emph{Segurança.} Devido à abstração de detalhes de implementação como o gerenciamento de memória, as linguagens de programação de alto nível liberam o programador de escrever muitos trechos de código críticos à segurança do sistema. Tal filosofia diminui a chance de erros de programação levarem a falhas catastróficas. Através da escolha de uma linguagem de programação popular e, consequentemente, devidamente testada, mitiga-se também a chance de a própria linguagem apresentar falhas que possam ser exploradas por atacantes maliciosos.
 \end{itemize}
 
 Enquanto grande parte dos elementos arquiteturais do sistema não depende da definição de uma linguagem de programação específica, é necessário que tal escolha se dê entre as linguagens de alto nível, principalmente devido aos altos riscos de segurança associados à exposição de aplicações à Internet.
@@ -516,6 +582,7 @@ Devido à exposição à carga a qual um SESC pode estar exposto e aos altos cus
 
 Devido ao alto risco associado à execução de código arbitrário, as precauções de segurança têm de partir do ponto mais profundo possível, chegando à proteção dos pontos de chamada das \emph{system calls} do \emph{kernel} do sistema operacional. O acesso do código sendo executado deve ser controlado através de um modelo de \emph{whitelist,} e não \emph{blacklist.} Mais de uma camada de proteção deve ser utilizada, a fim de mitigar as chances de falha catastrófica.
 
+\clearpage
 \section{Arquitetura do sistema}
 
 Em função do conjunto de considerações e estratégias arquiteturais, e com base nas características dos usos projetados da aplicação, são tomadas decisões sobre a arquitetura proposta do sistema.
@@ -557,7 +624,7 @@ O software de execução de código também deve ser stateless, permitindo um f�
 
 O modelo de segurança, em particular aquele do subsistema de execução de código, se dá através de segurança em profundidade, partindo da camada mais profunda da aplicação. O sistema de execução faz uso do AppArmor, que implementa restrições às permissões das aplicações por \emph{whitelist} em nível de \emph{kernel,} sendo capaz de aplicar o filtro a todas as operações de \emph{system calls} disponíveis ao espaço de usuário. Pertencem à whitelist dos programas externos sendo executados apenas as permissões que são estritamente necessárias.
 
-Os limites sobre os recursos do sistema são colocados da maneira mais restrita possível, sendo o único controle do AppArmor que requer diminuição explícita das permissões. Em particular, forma considerados ataques como o chamado \emph{fork bomb,} no qual um processo tendo por única operação disparar mais processos é executado, esgotam rapidamente os recursos do sistema, impedindo qualquer tentativa de recuperação.
+Os limites sobre os recursos do sistema são colocados da maneira mais restrita possível, sendo o único controle do AppArmor que requer diminuição explícita das permissões. Em particular, foram considerados ataques como o chamado \emph{fork bomb,} no qual um processo tendo por única operação disparar mais processos é executado, esgotam rapidamente os recursos do sistema, impedindo qualquer tentativa de recuperação.
 
 Além disso, a implementação do sistema de execução deve ser feita da maneira mais enxuta possível, fazendo o mínimo uso de recursos e diminuindo ao máximo sua exposição externa. Desta forma, diminui-se a superfície de ataque, o que atua como mais uma barreira de segurança.
 
@@ -582,7 +649,7 @@ Neste protótipo, um sistema para competições mínimo foi implementado, suport
 
 Fazendo uso da arquitetura proposta e da técnica de long polling, o usuário recebe os resultados de sua avaliação assim que disponíveis. Após o envio de um código, uma linha referente à nova execução é dinamicamente acrescentada ao topo da tabela, contendo inicialmente um símbolo de carregamento \figref{facs-running}. Assim que a submissão é totalmente processada pelo sistema, a tabela visível ao usuário é automaticamente atualizada com o resultado da submissão.
 
-\figcustom{facs-running}{FACS: execução de uma submissão}{tp}{1}
+\figcustom{facs-running}{FACS: execução de uma submissão}{bp}{1}
 
 O protótipo mostra que a capacidade de a página atualizar-se sem a intervenção do usuário é muito útil ao competidor, uma vez que o livra da necessidade de atualizar a página manualmente, como é comum nos outros sistemas para competições de programação. A mesma técnica pode, ainda ser usada para outras informações de atualização dinâmica como o ranking dos competidores ao longo de uma competição.
 
@@ -592,9 +659,11 @@ Funcionalidades como o ranking de competidores ou um sistema de questionamentos 
 
 Neste protótipo, foi implementado um simples ambiente integrado de desenvolvimento online, que possibilita ao usuário editar código C++ e, rapidamente, ter acesso ao resultado de sua execução.
 
-\figcustom{ide}{Tela principal do ambiente integrado de desenvolvimento online}{tp}{.9}
+\figcustom{ide}{Tela principal do ambiente integrado de desenvolvimento online}{p}{.9}
 
 A interface é composta de uma única página \figref{ide}, na qual o usuário é capaz de digitar (ou colar) o código C++ que deseja ver executado. O usuário pode, então, clicar no botão ``Run,'' que enviará o código ao servidor e fará o cliente aguardar os resultados. Assim que os resultados são emitidos pelo sistema, o cliente é atualizado com a saída da execução (``... and check out the result!'').
+
+\clearpage
 
 O protótipo mostra claramente uma das possibilidades abertas da execução automática de código arbitrário, permitindo o desenvolvimento de pequenos trechos de código C++ com uma barreira de entrada essencialmente nula. É fácil imaginar um aprendiz de C++ utilizando um sistema parecido com o elaborado neste protótipo.
 
@@ -624,7 +693,7 @@ Ao disparar o processo de compilação do código (no caso, o GCC), esse process
 
 Embora o GCC seja um processo confiável do sistema, o código externo a que é submetido não o é, fazendo com que seja mais seguro confinar o GCC a um ambiente bastante restrito caso existam bugs em sua implementação. Esta proteção é mais um dos componentes na defesa em profundidade do sistema.
 
-Ao disparar um processo de execução do código compilado pelo GCC, esse processo também é colocado sob a responsabilidade de um usuário com permissões mínimas. O código sendo executado é colocado sob um perfil de segurança AppArmor essencialmente vazio, pois os programas sendo executados não precisam de permissão alguma dentre aquelas providas. O perfil de segurança estabelece, apenas, os limites descritos na \tblref{execution-limits}.
+Ao disparar um processo de execução do código compilado pelo GCC, esse processo também é colocado sob a responsabilidade de um usuário com permissões mínimas. O código sendo executado é colocado sob um perfil de segurança AppArmor essencialmente vazio, pois os programas sendo executados não precisam de permissão alguma dentre aquelas providas. No caso de aplicações Java, apenas as bibliotecas necessárias à execução da máquina virtual são fornecidas ao ambiente. O perfil de segurança estabelece, apenas, os limites descritos na \tblref{execution-limits}.
 
 \begin{table}[h]
 	\centering
@@ -641,6 +710,115 @@ Ao disparar um processo de execução do código compilado pelo GCC, esse proces
 \end{table}
 
 Note-se que o limite sobre o número de processos protege contra a exaustão da tabela de processos do sistema, que pode ser esgotada através, por exemplo, do ataque de \emph{fork bomb,} no qual um processo que tem por única operação disparar mais processos é executado. Nesse ataque, o número de identificadores do sistema rapidamente se esgota, fazendo com que seja muito difícil recuperar a situação: qualquer execução de programa novo com o intuito de limpar o sistema tentará disparar outro processo, o que não será possível devido à exaustão da tabela de processos.
+
+\section{Testes e validação do protótipo}
+
+Nas seções a seguir, descrevemos os testes efetuados que validam as considerações e requisitos de segurança e performance do projeto.
+
+\subsection{Segurança}
+
+Com base em \cite{forisek2006security}, foi efetuada uma sequência de testes com o fim de validar a segurança do sistema com relação a diversos tipos de ataques. Quando não explícito, os testes foram efetuados na interface de IDE online do sistema, mas, devido ao uso, essencialmente, do mesmo \emph{backend,} poucas ou nenhuma diferença pode ser esperada entre o comportamento das duas interfaces.
+
+\subsubsection{Forçando alto tempo de compilação}
+
+Um programa em C/C++ simples e curto pode, ainda assim, fazer uso de um tempo de compilação bastante significativo. Se o sistema de compilação não impuser um tempo máximo de compilação, o atacante pode enviar um código-fonte capaz de inutilizar o sistema por um longo período de tempo. O ataque pode ser prevenido impondo-se um tempo limite para o processo de compilação, da mesma forma como deve ser feito para o código do usuário.
+
+Para este teste, a entrada presente na Listagem \ref{lst:highcomp} foi introduzida na interface da IDE online. Esta entrada tem menos de 1200 linhas, mas, ainda assim, é capaz de consumir um tempo extremamente grande de compilação.
+
+\begin{lstlisting}[float=bp, label=lst:highcomp, caption=Código C++ com alto tempo de compilação]
+#include <map>
+using namespace std;
+
+typedef map<int,int> M1;
+typedef map<M1,M1> M2;
+typedef map<M2,M2> M3;
+// ... o padrao continua ...
+typedef map<M998,M998> M999;
+typedef map<M999,M999> M1000;
+
+int main() {
+    M1000 tmp; 
+}
+\end{lstlisting}
+
+\begin{lstlisting}[float=bp, label=lst:highcompres, caption=Erro proveniente de alto tempo de compilação]
+===== COMPILATION ERROR =====
+g++: CPU time limit exceeded (program cc1plus)
+\end{lstlisting}
+
+Devido à medida preventiva de limitar o tempo de compilação em 30 segundos, após este período de tempo, o sistema retornou com a resposta da Listagem \ref{lst:highcompres}. O sistema não apresentou queda ou ficou parado por tempo arbitrário, retornando apenas um erro de compilação, como esperado. O protótipo mostra-se, então, devidamente resiliente a este tipo de ataque.
+
+\subsubsection{Forçando alto consumo de recursos durante a compilação}
+
+Devido ao desenho da linguagem (especialmente C++), uma grande gama de compiladores pode, por vezes, necessitar de um \emph{lookahead} indefinido enquanto analisando o código-fonte~--- para entender um comando dentro de um contexto, o compilador necessita de analisar o código adiante, e essa quantidade de código que necessita de análise pode não ser limitada.
+
+Sendo assim, quando ao compilador é fornecido um grande arquivo de entrada, este pode precisar de lê-lo inteiramente na memória. Uma maneira particularmente eficiente de atingir esse efeito é apresentada na Listagem \ref{lst:resourcecomp}. A princípio, apresentado a este arquivo, o compilador irá lê-lo indefinidamente até exaurir a memória do computador.
+
+\begin{lstlisting}[float=bp, label=lst:resourcecomp, caption=Código C++ com alto consumo de recursos durante a compilação]
+#include "/dev/urandom"
+\end{lstlisting}
+
+O problema pode ser prevenido submetendo o compilador ao mesmo ambiente de consumo restrito de recursos a que a execução do código do usuário é submetido.
+
+Observe que a exaustão de memória virtual pode ocasionar grave mal-funcionamento do sistema, uma vez que o sistema operacional pode passar a terminar qualquer aplicação que requisite memória, mesmo que tal aplicação seja crítica ao sistema.
+
+Para o teste, o sistema foi submetido à Listagem \ref{lst:resourcecomp}. Devido à medida preventiva de executar o compilador em ambiente estanque, o resultado, após um curto período de tempo, foi a Listagem \ref{lst:resourcecompres}. O sistema não apresentou queda ou negação de serviço por tempo indeterminado, atestando o correto manuseio do ataque.
+
+\begin{lstlisting}[float=bp, label=lst:resourcecompres, caption=Erro proveniente de alto consumo de recursos durante compilação]
+===== COMPILATION ERROR =====
+g++: CPU time limit exceeded (program cc1plus)
+\end{lstlisting}
+
+\subsubsection{Modificação ou ataque ao ambiente de teste}
+
+O tipo mais simples de ataque ao sistema de teste consiste em enviar um programa que tenta deletar tudo aquilo o que conseguir. Outro tipo mais sutil de ataque consiste em criar um arquivo e tentar preenchê-lo o mais rapidamente o possível no intuito de forçar o sistema a exaurir seu espaço em disco. Os dois tipos de ataques foram realizados sob a forma das Listagens \ref{lst:delete} e \ref{lst:fulldisk}.
+
+\begin{lstlisting}[float=bp, label=lst:delete, caption=Código C++ que tenta deletar o sistema]
+#include <cstdio>
+#include <unistd.h>
+
+int main() {
+  if (unlink("/") == 0) {
+    printf("delete successful!\n");
+  } else {
+    printf("delete unsuccessful.\n");
+  }
+
+  return 0;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[float=tp, label=lst:fulldisk, caption=Código C++ que tenta preencher todo o espaço em disco]
+#include <cstdio>
+
+char buffer[1024 * 1024];
+
+int main() {
+  FILE *fout = fopen("huge_output", "w");
+
+  for (int i = 0; i < 1024 * 1024; ++i)
+    buffer[i] = 'A';
+  buffer[1024 * 1024 - 1] = 0;
+
+  while (true) {
+    fprintf(fout, "%s\n", buffer);
+  }
+
+  return 0;
+}
+\end{lstlisting}
+
+Devido ao ambiente estanque ao qual o programa sendo executado é submetido, nenhum dano foi causado ao sistema, como pode ser visto nos valores de retorno das Listagens \ref{lst:deleteres} e \ref{lst:fulldiskres}. Observe que o sistema não foi capaz de deletar arquivo algum ou mesmo abrir algum arquivo para gravação, comprovando que o ambiente de execução é estanque.
+
+\begin{lstlisting}[float=tp, label=lst:deleteres, caption=Erro proveniente da tentativa de deletar o sistema]
+delete unsuccessful.
+\end{lstlisting}
+
+\begin{lstlisting}[float=tp, label=lst:fulldiskres, caption=Erro proveniente da tentativa de preencher o espaço em disco do sistema]
+===== RUNTIME ERROR =====
+signal: SIGSEGV
+\end{lstlisting}
+
 
 \subsection{Escalabilidade}
 
@@ -681,9 +859,7 @@ Neste capítulo, efetuaremos os comentários finais sobre este trabalho, com uma
 
 Neste trabalho, foi analisada a problemática envolvida com o design e a implementação de sistemas online para a execução segura de código arbitrário, com o aprofundamento sobre os casos de uso de maior destaque e extensiva cobertura bibliográfica.
 
-Foi apresentado, também, um projeto de sistema que busca apresentar as características desejadas e resolver as dificuldades encontradas, bem como a implementação de um protótipo do mesmo. Uma análise das tecnologias mais adequadas foi feita, além da exposição da sequência de considerações e estratégias arquiteturais reunidas para a concepção de um projeto de sistema de boa qualidade.
-
-\[ a^2 + \alpha^2 = 1 \]
+Foi apresentado, também, um projeto de sistema que busca apresentar as características desejadas e resolver as dificuldades encontradas, bem como a implementação de um protótipo do mesmo. Uma análise das tecnologias mais adequadas foi feita, com um foco na elaboração de explicações didáticas para os principais tópicos abordados. Além disso, foi feita uma exposição da sequência de considerações e estratégias arquiteturais reunidas para a concepção de um projeto de sistema de boa qualidade. O protótipo foi testado tanto quanto à sua segurança quanto à sua escalabilidade, validando as considerações feitas ao longo do projeto.
 
 \section{Trabalhos Futuros}
 
@@ -694,5 +870,9 @@ O trabalho também abre a possibilidade de estudos mais detalhados sobre o desen
 \bibliography{tg-cesarkawakami}
 
 \includepdf{registro}
+
+\bookmark[level=0, page=65]{Referências}
+
+\bookmark[level=0, page=67]{Folha de Registro do Documento}
 
 \end{document}
